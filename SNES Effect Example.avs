@@ -35,7 +35,15 @@ function txt(clip c, string text) {
 	return Subtitle(c, text, size=36, align=2, text_color=$CCCCCC)
 }
 
+# An example of dissolving with the effect.
+dissolve_from = txt(video, "dissolving between clips; blend=true").Trim(0,3*30)
+dissolve_to = ColorBars().AudioDub(video).AssumeFPS(30).Trim(0, 3*30)
+dissolve_example = Dissolve(SNESPixelOut(dissolve_from, blend=true), \
+    SNESPixelIn(dissolve_to, blend=true), 32)
+
+# Basic sample of the types of things that happen
 SNESPixelIO(txt(video, "blend=false, center=false"), blend=false, center=false) ++ \
 SNESPixelIO(txt(video, "blend=true, center=false"), blend=true, center=false) ++ \
 SNESPixelIO(txt(video, "blend=false, center=true"), blend=false, center=true) ++ \
-SNESPixelIO(txt(video, "blend=true, center=true"), blend=true, center=true)
+SNESPixelIO(txt(video, "blend=true, center=true"), blend=true, center=true) ++ \
+dissolve_example
