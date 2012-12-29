@@ -30,7 +30,8 @@ function SNESPixelEffect(clip c, int step, bool "blend", bool "center") {
 # max - the max "zoom" level, defaults to 32
 # frames - the number of frames over which to do the effect, defaults to max
 # blend - when true, "blend" the lower-level pixels together, effectively
-#   blurring over each large pixel. When false, only expland a single pixel
+#   blurring over each large pixel. When false, picks a single pixel instead of
+#   blurring multiple lower-level pixels together.
 # center - when true, "center" the results so that the pixel appears in the
 #   middle; when false, keep it in the left-most corner.
 function SNESPixelIn(clip c, int "max", int "frames", bool "blend", bool "center") {
@@ -48,7 +49,10 @@ function SNESPixelIn(clip c, int "max", int "frames", bool "blend", bool "center
 # max - the max "zoom" level, defaults to 32
 # frames - the number of frames over which to do the effect, defaults to max
 # blend - when true, "blend" the lower-level pixels together, effectively
-#   blurring over each large pixel. When false, only expland a single pixel
+#   blurring over each large pixel. When false, picks a single pixel instead of
+#   blurring multiple lower-level pixels together.
+# center - when true, "center" the results so that the pixel appears in the
+#   middle; when false, keep it in the left-most corner.
 function SNESPixelOut(clip c, int "max", int "frames", bool "blend", bool "center") {
     max = Default(max, 32)
     frames = Default(frames, max)
@@ -66,7 +70,10 @@ function SNESPixelOut(clip c, int "max", int "frames", bool "blend", bool "cente
 # max - the max "zoom" level, defaults to 32
 # frames - the number of frames over which to do the effect, defaults to max
 # blend - when true, "blend" the lower-level pixels together, effectively
-#   blurring over each large pixel. When false, only expland a single pixel
+#   blurring over each large pixel. When false, picks a single pixel instead of
+#   blurring multiple lower-level pixels together.
+# center - when true, "center" the results so that the pixel appears in the
+#   middle; when false, keep it in the left-most corner.
 function SNESPixelIO(clip c, int "max", int "frames", bool "blend", bool "center") {
     max = Default(max, 32)
     frames = Default(frames, max)
