@@ -12,6 +12,7 @@ video = Subtitle(video, "This is an example.", size=72, align=5)
 
 # Add some pixels to the corners to make this clearer...
 
+# Create a dithered pattern.
 pixel = BlankClip(color=$FFFF00FF, width=1, height=1)
 dithered = BlankClip(color=$FF808080, width=4, height=4)
 dithered = Layer(dithered, pixel, x=0, y=0)
