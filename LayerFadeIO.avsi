@@ -16,11 +16,12 @@ function LayerFadeIO(clip back, clip over, int start, int end, int start_time, i
 	Assert(start < back.FrameCount(), "Start time (" + String(start) + ") is after clip ends (" + String(back.FrameCount()-1) + ")")
 	Assert(end < back.FrameCount(), "End time (" + String(end) + ") is after clip ends (" + String(back.FrameCount()-1) + ")")
 	Assert(end - start_time > start, "End time does not give enough time for the clip to fade in")
-	before = Trim(back, 0, start - 1)
 	part_1 = Trim(back, start, start + start_time)
 	after = Trim(back, start + start_time + 1, 0)
-	before = before + Animate(part_1, 0, start_time, "Layer", \
+	before = Animate(part_1, 0, start_time, "Layer", \
 		over,"add",0,x,y, over,"add",257,x,y)
+	# If start is 0, we need to skip the before bit entirely
+	before = start > 0 ? Trim(back, 0, start - 1) + before : before
 	# Convert end to after time
 	end = end - before.FrameCount()
 	over = Trim(over, start_time + 1, 0)
