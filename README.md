@@ -31,3 +31,9 @@ overlay information on top of a base clip for a portion of the clip.
 -----------------
 
 Provides a pixelation effect, similar to the effect a ton of SNES games use.
+
+`avisynth.xml`
+--------------
+
+An edit mode for [jEdit](http://www.jedit.org), which is my primary text editor
+of choice. Despite it being written in Java.

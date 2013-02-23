@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE MODE SYSTEM "xmode.dtd">
+
+<MODE>
+	<PROPS>
+		<PROPERTY NAME="lineComment" VALUE="#" />
+		<PROPERTY NAME="commentStart" VALUE="[*" />
+		<PROPERTY NAME="commentEnd" VALUE="*]" />
+		<PROPERTY NAME="indentOpenBrackets" VALUE="{" />
+		<PROPERTY NAME="indentCloseBrackets" VALUE="}" />
+		<PROPERTY NAME="wordBreakChars" VALUE=",+-=&lt;&gt;/?^&amp;*" />
+	</PROPS>
+	<RULES IGNORE_CASE="TRUE" HIGHLIGHT_DIGITS="TRUE" DIGIT_RE="([+-]?([0-9]+\.[0-9]*)|[+-]?[1-9][0-9]*|\$[0-9A-Fa-f]+|0)">
+		<!-- Comments -->
+		<EOL_SPAN TYPE="COMMENT1">#</EOL_SPAN>
+		<!-- Useless comments -->
+		<SEQ TYPE="COMMENT2">/**/</SEQ>
+		<SEQ TYPE="COMMENT3">[**]</SEQ>
+
+		<SPAN TYPE="COMMENT2">
+			<BEGIN>/*</BEGIN>
+			<END>*/</END>
+		</SPAN>
+		<SPAN TYPE="COMMENT3" DELEGATE="NESTED_COMMENT">
+			<BEGIN>[*</BEGIN>
+			<END>*]</END>
+		</SPAN>
+
+		<MARK_PREVIOUS TYPE="KEYWORD2" MATCH_TYPE="OPERATOR">=</MARK_PREVIOUS>
+		<SEQ_REGEXP TYPE="DIGIT" AT_WORD_START="TRUE" HASH_CHAR="$">\$[0-9A-Fa-f]+</SEQ_REGEXP>
+
+		<!-- Literals -->
+		<SPAN TYPE="LITERAL1" DELEGATE="LITERAL">
+			<BEGIN>"""</BEGIN>
+			<END>"""</END>
+		</SPAN>
+		<SPAN TYPE="LITERAL1" DELEGATE="LITERAL" NO_LINE_BREAK="true">
+			<BEGIN>"</BEGIN>
+			<END>"</END>
+		</SPAN>
+
+		<!-- Operators -->
+        	<SEQ TYPE="OPERATOR">!=</SEQ>
+		<SEQ TYPE="OPERATOR">=</SEQ>
+		<SEQ TYPE="OPERATOR">+</SEQ>
+		<SEQ TYPE="OPERATOR">-</SEQ>
+		<SEQ TYPE="OPERATOR">*</SEQ>
+		<SEQ TYPE="OPERATOR">/</SEQ>
+		<SEQ TYPE="OPERATOR">%</SEQ>
+		<SEQ TYPE="OPERATOR">?</SEQ>
+		<SEQ TYPE="OPERATOR">:</SEQ>
+		<SEQ TYPE="OPERATOR">&lt;</SEQ>
+		<SEQ TYPE="OPERATOR">&gt;</SEQ>
+		<SEQ TYPE="OPERATOR">&amp;&amp;</SEQ>
+		<SEQ TYPE="OPERATOR">||</SEQ>
+		<SEQ TYPE="OPERATOR">{</SEQ>
+		<SEQ TYPE="OPERATOR">}</SEQ>
+
+		<!-- functions -->
+		<MARK_PREVIOUS TYPE="FUNCTION" MATCH_TYPE="OPERATOR">(</MARK_PREVIOUS>
+		<SEQ TYPE="OPERATOR">)</SEQ>
+
+		<KEYWORDS>
+			<KEYWORD1>function</KEYWORD1>
+			<KEYWORD1>global</KEYWORD1>
+			<KEYWORD1>return</KEYWORD1>
+			<KEYWORD1>try</KEYWORD1>
+			<KEYWORD1>catch</KEYWORD1>
+			<KEYWORD2>last</KEYWORD2> 
+
+			<!-- Literals -->
+			<LITERAL2>true</LITERAL2>
+			<LITERAL2>false</LITERAL2>
+			<LITERAL2>yes</LITERAL2>
+			<LITERAL2>no</LITERAL2>
+
+			<!-- Types -->
+			<KEYWORD3>clip</KEYWORD3>
+			<KEYWORD3>int</KEYWORD3>
+			<KEYWORD3>float</KEYWORD3>
+			<KEYWORD3>string</KEYWORD3>
+			<KEYWORD3>bool</KEYWORD3>
+			<KEYWORD3>val</KEYWORD3>
+		</KEYWORDS>
+
+		<SPAN_REGEXP HASH_CHAR="_" TYPE="COMMENT4">
+			<BEGIN>^\s*__END__\s*$</BEGIN>
+			<END>never</END>
+		</SPAN_REGEXP>
+	</RULES>
+
+	<RULES SET="LITERAL" DEFAULT="LITERAL1">
+	</RULES>
+
+	<RULES SET="NESTED_COMMENT" DEFAULT="COMMENT3">
+		<!-- Re-delegate to ourself because these can be nested -->
+		<SPAN TYPE="COMMENT3" DELEGATE="NESTED_COMMENT">
+			<BEGIN>[*</BEGIN>
+			<END>*]</END>
+		</SPAN>
+	</RULES>
+</MODE>
