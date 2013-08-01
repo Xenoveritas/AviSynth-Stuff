@@ -29,27 +29,35 @@ Plugin Functions
 
 The plugin includes the following AviSynth functions:
 
-### `ImageText(clip font, string text, int "rows", int "cols", string "unimplemented", boolean "multiline")`
+### ImageText
+
+`ImageText(clip font, string text, int "rows", int "cols", string "unimplemented", boolean "multiline")`
 
 Take an image from `font` and generate a new clip from it that contains the same
 number of frames, rendering the given text `text` using the `font`.
 
-`font` - the clip to use
-`text` - the text to render
-`rows` - the number of rows of text in the clip (default: 0)
-`cols` - the number of columns of text in the clip (default: 16)
-`unimplemented` - ignore this for now :)
-`multiline` - when true, the `\n` escape sequence in `text` will produce
+* `font` - the clip to use
+* `text` - the text to render
+* `rows` - the number of rows of text in the clip (default: 0)
+* `cols` - the number of columns of text in the clip (default: 16)
+* `unimplemented` - ignore this for now :)
+* `multiline` - when true, the `\n` escape sequence in `text` will produce
 newlines in the output image.
 
-### `PaletteSwap(clip c, string palette)`
+### PaletteSwap
+
+`PaletteSwap(clip c, string palette)`
 
 Swaps colors in the input clip based on the palette definition.
 
-### `Counter`(clip numbers, int frames..., boolean "pad_zero", boolean "show_zero", int "spin_time")`
+### Counter
+
+`Counter(clip numbers, int frames..., boolean "pad_zero", boolean "show_zero", int "spin_time")`
 
 Creates a counter that counts up on each given input frame.
 
-### `CounterStr(clip numbers, string frames, boolean "pad_zero", boolean "show_zero", int "spin_time")`
+### CounterStr
+
+`CounterStr(clip numbers, string frames, boolean "pad_zero", boolean "show_zero", int "spin_time")`
 
 Same as above, but uses a string of comma-separated numbers to define the frames.
