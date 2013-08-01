@@ -1,0 +1,3 @@
+# Ignore local/generated files:
+setenv.bat
+log.txt

@@ -1,0 +1,15 @@
+# Ignore Debug/Release directories
+/Debug
+/xvplugins/Debug
+/Release
+/xvplugins/Release
+
+# Ignore user files:
+*.suo
+
+# Ignore sdf files, I *think* (these apparently will be generated locally anyway)
+*.sdf
+*.opensdf
+
+# I think we want to ignore ipch
+/ipch
