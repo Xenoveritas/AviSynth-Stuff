@@ -1,0 +1,16 @@
+# Ignore Debug/Release directories
+/Debug
+/autotrace/Debug
+/Release
+/autotrace/Release
+
+# Ignore user files:
+*.suo
+*.user
+
+# Ignore sdf files, I *think* (these apparently will be generated locally anyway)
+*.sdf
+*.opensdf
+
+# I think we want to ignore ipch
+/ipch

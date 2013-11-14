@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C424041F-AA3A-4080-98D0-CF55635C2DA9}</ProjectGuid>
+    <SccProjectName />
+    <SccLocalPath />
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>_NDEBUG;WIN32;_WINDOWS;_VISUALC_;NeedFunctionPrototypes;AUTOTRACE_VERSION="0.31";inline=__inline;_MAGICKDLL_;AUTOTRACE_WEB="http://autotrace.sourceforge.net";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>CORE_RL_magick_.lib;libming.lib;odbc32.lib;odbccp32.lib;pstoedit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <Midl>
+      <TypeLibraryName>.\autotrace___Win32_Release/autotrace.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0407</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_VISUALC_;NeedFunctionPrototypes;AUTOTRACE_VERSION="0.30";inline=__inline;_MAGICKDLL_;AUTOTRACE_WEB="http://autotrace.sourceforge.net";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <Midl>
+      <TypeLibraryName>.\autotrace___Win32_Debug/autotrace.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0407</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="atou.c" />
+    <ClCompile Include="autotrace.c" />
+    <ClCompile Include="bitmap.c" />
+    <ClCompile Include="color.c" />
+    <ClCompile Include="curve.c" />
+    <ClCompile Include="despeckle.c" />
+    <ClCompile Include="epsilon-equal.c" />
+    <ClCompile Include="exception.c" />
+    <ClCompile Include="filename.c" />
+    <ClCompile Include="fit.c" />
+    <ClCompile Include="image-proc.c" />
+    <ClCompile Include="logreport.c" />
+    <ClCompile Include="median.c" />
+    <ClCompile Include="pxl-outline.c" />
+    <ClCompile Include="spline.c" />
+    <ClCompile Include="strgicmp.c" />
+    <ClCompile Include="thin-image.c" />
+    <ClCompile Include="vector.c" />
+    <ClCompile Include="xstd.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="atou.h" />
+    <ClInclude Include="autotrace.h" />
+    <ClInclude Include="bitmap.h" />
+    <ClInclude Include="color.h" />
+    <ClInclude Include="curve.h" />
+    <ClInclude Include="despeckle.h" />
+    <ClInclude Include="epsilon-equal.h" />
+    <ClInclude Include="exception.h" />
+    <ClInclude Include="filename.h" />
+    <ClInclude Include="fit.h" />
+    <ClInclude Include="image-header.h" />
+    <ClInclude Include="image-proc.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="logreport.h" />
+    <ClInclude Include="message.h" />
+    <ClInclude Include="output.h" />
+    <ClInclude Include="ptypes.h" />
+    <ClInclude Include="pxl-outline.h" />
+    <ClInclude Include="quantize.h" />
+    <ClInclude Include="spline.h" />
+    <ClInclude Include="strgicmp.h" />
+    <ClInclude Include="thin-image.h" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="vector.h" />
+    <ClInclude Include="xstd.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
