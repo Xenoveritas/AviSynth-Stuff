@@ -8,6 +8,14 @@ Something Awful.
 
 It may also prove useful to some other people. There's not a lot here right now.
 
+Plugins
+-------
+`xvplugins` is simply a bunch of custom AviSynth stuff that proved impossible to
+do directly in AviSynth that might be of some use to other people.
+
+`AutoTrace`, on the other hand, takes [AutoTrace](http://autotrace.sourceforge.net/)
+and horribly misuses it to resize videos.
+
 `Timer.avsi`
 ------------
 

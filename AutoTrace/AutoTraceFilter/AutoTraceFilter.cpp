@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "AutoTraceFilter.h"
 
-AutoTraceFilter::AutoTraceFilter(PClip aChild, int aWidth, int aHeight) :
+AutoTraceFilter::AutoTraceFilter(PClip aChild, int aWidth, int aHeight, at_fitting_opts_type* aFittingOpts) :
 		GenericVideoFilter(aChild),
 		destWidth(aWidth), destHeight(aHeight) {
 	const VideoInfo& info = child->GetVideoInfo();
@@ -24,12 +24,13 @@ AutoTraceFilter::AutoTraceFilter(PClip aChild, int aWidth, int aHeight) :
 	vi.width = destWidth;
 	vi.height = destHeight;
 	vi.pixel_type = VideoInfo::CS_BGR32;
-	fitting_opts = at_fitting_opts_new();
+	fitting_opts = aFittingOpts == NULL ? at_fitting_opts_new() : aFittingOpts;
 }
 
 AutoTraceFilter::~AutoTraceFilter() {
 	delete renderedFrame;
 	delete renderedFrameData;
+	at_fitting_opts_free(fitting_opts);
 }
 
 void exception_handler(at_string msg, at_msg_type msg_type, at_address client_data) {
@@ -124,20 +125,59 @@ AVSValue __cdecl Create_AutoTrace(AVSValue args, void* user_data, IScriptEnviron
 	PClip clip = args[0].AsClip();
 	const VideoInfo& vi = clip->GetVideoInfo();
 	if (vi.IsRGB24()) {
-		return new AutoTraceFilter(clip, args[1].AsInt(), args[2].AsInt());
+		at_fitting_opts_type* fitting_opts = at_fitting_opts_new();
+		// Setting fitting opts based on input
+		fitting_opts->color_count = args[3].AsInt(0);
+		int destWidth = args[1].AsInt(0);
+		int destHeight = args[1].AsInt(0);
+		// If the inputs are left off entirely (or 0 or negative), then use the
+		// input size. If either one is left off (or 0 or negative), then
+		// determine that one based on presevering the aspect ratio of the
+		// given value.
+		if (destWidth <= 0) {
+			if (destHeight <= 0) {
+				destWidth = vi.width;
+				destHeight = vi.height;
+			} else {
+				// Calculate width based off desired height
+				destWidth = destHeight * vi.width / vi.height;
+			}
+		} else if (destHeight <= 0) {
+			// Calculate height based off desired width
+			destHeight = destWidth * vi.height / vi.width;
+		}
+		return new AutoTraceFilter(clip, destWidth, destHeight, fitting_opts);
 	} else {
 		env->ThrowError("AutoTrace requires an RGB24 image");
 		return NULL;
 	}
 }
 
+class GdiplusLifecycleHandler {
+public:
+	GdiplusLifecycleHandler() {
+		Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+		GdiplusStartup(&token, &gdiplusStartupInput, NULL);
+	}
+	~GdiplusLifecycleHandler() {
+		Gdiplus::GdiplusShutdown(token);
+	}
+private:
+	ULONG_PTR token;
+};
+
+void ShutdownGdiplus(void* lifecycle, IScriptEnvironment* env) {
+	delete ((GdiplusLifecycleHandler*)lifecycle);
+}
+
 // The following function is the function that actually registers the filter in AviSynth
 // It is called automatically, when the plugin is loaded to see which functions this filter contains.
 extern "C" __declspec(dllexport) const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env) {
-	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	env->AddFunction("AutoTrace", "cii", Create_AutoTrace, NULL);
-	ULONG_PTR token;
-	GdiplusStartup(&token, &gdiplusStartupInput, NULL);
+	// Startup Gdiplus:
+	GdiplusLifecycleHandler* lifecycle = new GdiplusLifecycleHandler();
+	// And then, at exit, kill it
+	env->AtExit(ShutdownGdiplus, lifecycle);
+	env->AddFunction("AutoTraceResize", "c[WIDTH]i[HEIGHT]i[COLORS]i", Create_AutoTrace, NULL);
 
-	return "`AutoTrace' AutoTrace plugin";
+	return "`AutoTrace' AutoTrace resize plugin";
 }

@@ -7,7 +7,7 @@
 
 class AutoTraceFilter : public GenericVideoFilter {
 public:
-	AutoTraceFilter(PClip aChild, int aWidth, int aHeight);
+	AutoTraceFilter(PClip aChild, int aWidth, int aHeight, at_fitting_opts_type* aFittingOpts=NULL);
 	~AutoTraceFilter();
 	PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
 private:

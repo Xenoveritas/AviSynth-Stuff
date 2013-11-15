@@ -1,8 +1,10 @@
 # Ignore Debug/Release directories
 /Debug
 /autotrace/Debug
+/AutoTraceFilter/Debug
 /Release
 /autotrace/Release
+/AutoTraceFilter/Release
 
 # Ignore user files:
 *.suo
