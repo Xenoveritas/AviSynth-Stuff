@@ -48,7 +48,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <PreprocessorDefinitions>_NDEBUG;WIN32;_WINDOWS;_VISUALC_;NeedFunctionPrototypes;AUTOTRACE_VERSION="0.31";inline=__inline;_MAGICKDLL_;AUTOTRACE_WEB="http://autotrace.sourceforge.net";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -71,7 +71,7 @@
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_VISUALC_;NeedFunctionPrototypes;AUTOTRACE_VERSION="0.30";inline=__inline;_MAGICKDLL_;AUTOTRACE_WEB="http://autotrace.sourceforge.net";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
