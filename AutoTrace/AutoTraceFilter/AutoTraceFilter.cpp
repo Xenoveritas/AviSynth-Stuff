@@ -129,7 +129,7 @@ AVSValue __cdecl Create_AutoTrace(AVSValue args, void* user_data, IScriptEnviron
 		// Setting fitting opts based on input
 		fitting_opts->color_count = args[3].AsInt(0);
 		int destWidth = args[1].AsInt(0);
-		int destHeight = args[1].AsInt(0);
+		int destHeight = args[2].AsInt(0);
 		// If the inputs are left off entirely (or 0 or negative), then use the
 		// input size. If either one is left off (or 0 or negative), then
 		// determine that one based on presevering the aspect ratio of the

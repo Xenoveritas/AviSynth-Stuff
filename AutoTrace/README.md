@@ -18,12 +18,12 @@ The filter itself is:
 
 `AutoTraceResize(clip c, int width=0, int height=0, int colors=0)`
 
-| parameter | default | description
-|-----------|---------|-------------------------
-| c         | (none)  | the clip to resize, must be RGB24
-| width     | 0       | the width to resize to, if 0 (or less), this is based on the height, preserving the aspect ratio - if both are unset (or 0 or less), they are set to the input size
-| height    | 0       | the height to resize to, if 0 (or less), this is based on the width, preserving the aspect ratio - if both are unset (or 0 or less), they are set to the input size
-| colors    | 0       | AutoTrace's `color_count`: reduce the image to this number of colors before tracing, defaults to 0 - no color reduction. Must be between 0-256.
+| parameter | default    | description
+|-----------|------------|-------------------------
+| c         | (required) | the clip to resize, must be RGB24
+| width     | 0          | the width to resize to, if 0 (or less), this is based on the height, preserving the aspect ratio - if both are unset (or 0 or less), they are set to the input size
+| height    | 0          | the height to resize to, if 0 (or less), this is based on the width, preserving the aspect ratio - if both are unset (or 0 or less), they are set to the input size
+| colors    | 0          | AutoTrace's `color_count`: reduce the image to this number of colors before tracing, defaults to 0 - no color reduction. Must be between 0-256.
 
 The generated video is RGB32, because the result is rendered using GDI+ and
 that's what it returns. (Incidentally, because this relies on GDI+, this
