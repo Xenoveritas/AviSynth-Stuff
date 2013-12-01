@@ -40,6 +40,12 @@ overlay information on top of a base clip for a portion of the clip.
 
 Provides a pixelation effect, similar to the effect a ton of SNES games use.
 
+`TASBlend.avsi`
+---------------
+
+An implementation of the [TASBlend](http://tasvideos.org/EncodingGuide/TASBlend.html)
+filter.
+
 `avisynth.xml`
 --------------
 
