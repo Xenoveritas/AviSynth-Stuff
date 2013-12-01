@@ -164,6 +164,23 @@ AVSValue __cdecl Create_AutoTrace(AVSValue args, void* user_data, IScriptEnviron
 			// Calculate height based off desired width
 			destHeight = destWidth * vi.height / vi.width;
 		}
+		if (args[4].Defined()) {
+			// background_color
+			int background = args[4].AsInt();
+			if (background != -1) {
+				// To match the documentation, ignore -1, even though it would
+				// be a valid color. (And argueably makes more sense than
+				// 0xFFFFFF, as it has the alpha channel set to full.)
+				// Note that R and B are swapped. This is by design - rather
+				// than convert a BGR image into an RGB image as AutoTrace
+				// expects, we just let the B and R channels be "backwards" as
+				// within AutoTrace.
+				fitting_opts->background_color = at_color_new(
+					(background & 0x0000FF),
+					(background & 0x00FF00) >> 8,
+					(background & 0xFF0000) >> 16);
+			}
+		}
 		return new AutoTraceFilter(clip, destWidth, destHeight, fitting_opts);
 	} else {
 		env->ThrowError("AutoTrace requires an RGB24 image");
@@ -195,7 +212,7 @@ extern "C" __declspec(dllexport) const char* __stdcall AvisynthPluginInit2(IScri
 	GdiplusLifecycleHandler* lifecycle = new GdiplusLifecycleHandler();
 	// And then, at exit, kill it
 	env->AtExit(ShutdownGdiplus, lifecycle);
-	env->AddFunction("AutoTraceResize", "c[WIDTH]i[HEIGHT]i[COLORS]i", Create_AutoTrace, NULL);
+	env->AddFunction("AutoTraceResize", "c[WIDTH]i[HEIGHT]i[COLORS]i[BACKGROUND_COLOR]i", Create_AutoTrace, NULL);
 
 	return "`AutoTrace' AutoTrace resize plugin";
 }
