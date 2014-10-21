@@ -52,6 +52,10 @@ Filters for speeding up a clip without adjusting the pitch of the sound.
 An implementation of the [TASBlend](http://tasvideos.org/EncodingGuide/TASBlend.html)
 filter.
 
+## Utilities.avsi
+
+Various utility scripts that may or may not prove useful.
+
 ## avisynth.xml
 
 An edit mode for [jEdit](http://www.jedit.org/). I also have a separate
