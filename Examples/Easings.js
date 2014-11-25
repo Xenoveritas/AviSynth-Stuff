@@ -34,8 +34,8 @@ var totalWidth = 1280;
 var totalHeight = Math.ceil(easings.length / (totalWidth / width)) * height;
 
 console.log('global dot = BlankClip(%d, %d, %d, color=$FFFF0000)', frames, dotWidth, dotHeight);
-console.log('global fade_from = BlankClip(%d, %d, %d, fps=%d, color=$FF00FF00)', frames, width, height, fps);
-console.log('global fade_to = BlankClip(%d, %d, %d, fps=%d, color=$FF4080FF)', frames, width, height, fps);
+console.log('global fade_from = ImageSource("foggy.jpg", pixel_type="RGB32")');
+console.log('global fade_to = ImageSource("shoreline.jpg", pixel_type="RGB32")');
 console.log();
 console.log('function make_backdrop(string name) {');
 console.log('    c = BlankClip(width=%d, height=%d, fps=%d, length=%d, color=$FF000080)', width, height, fps, frames);

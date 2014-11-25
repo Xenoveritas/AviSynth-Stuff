@@ -3,14 +3,15 @@
 # This is a generated file. Use:
 #   node Easings.js > Easings.avs
 # to generate this file.
+#
 # These examples may still prove useful but this file is mostly intended to show
-# how to use the easings in your own scripts.
+# what the easings do.
 
 Import("..\Easings.avsi")
 
 global dot = BlankClip(150, 5, 5, color=$FFFF0000)
-global fade_from = BlankClip(150, 320, 240, fps=30, color=$FF00FF00)
-global fade_to = BlankClip(150, 320, 240, fps=30, color=$FF4080FF)
+global fade_from = ImageSource("foggy.jpg", pixel_type="RGB32")
+global fade_to = ImageSource("shoreline.jpg", pixel_type="RGB32")
 
 function make_backdrop(string name) {
     c = BlankClip(width=320, height=240, fps=30, length=150, color=$FF000080)

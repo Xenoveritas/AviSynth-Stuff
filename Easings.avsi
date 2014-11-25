@@ -44,10 +44,12 @@ function EasingBack(float p) {
 # http://gsgd.co.uk/sandbox/jquery/easing/jquery.easing.1.3.js
 
 function EasingBounce(p) {
-	return p < (1/2.75) ? (7.5625*p*p) : \
+	# Technically this is timed backwards from the original, so flip it
+	p = 1 - p
+	return 1 - ( p < (1/2.75) ? (7.5625*p*p) : \
 		p < (2/2.75) ? 7.5625*Pow(p - 1.5/2.75, 2) + 0.75 : \
 		p < (2.5/2.75) ? 7.5625*Pow(p - 2.25/2.75, 2) + 0.9375 : \
-			7.5625*Pow(p- 2.625/2.75, 2) + 0.984375
+			7.5625*Pow(p- 2.625/2.75, 2) + 0.984375 )
 }
 
 /*
