@@ -15,7 +15,7 @@ console.log('Import("..\\Easings.avsi")');
 console.log();
 
 var easings = [
-    'Quad', 'Cubic', 'Quart', 'Quint', 'Expo', 'Sine', 'Circ', 'Elastic', 'Back', 'Bounce'
+    'Linear', 'Quad', 'Cubic', 'Quart', 'Quint', 'Expo', 'Sine', 'Circ', 'Elastic', 'Back', 'Bounce'
 ];
 var types = [ 'In', 'Out', 'InOut' ];
 

@@ -9,6 +9,20 @@
 # is the end. You can then multiply them by whatever you're animating to apply
 # the easing. Note that some go beyond that range. (See easings.net for details.)
 
+function EasingLinear(float p) {
+	return p
+}
+# There's never any difference in any of the linear variants
+function EaseInLinear(float p) {
+	return p
+}
+function EaseOutLinear(float p) {
+	return p
+}
+function EaseInOutLinear(float p) {
+	return p
+}
+
 # Quad easing
 function EasingQuad(float p) {
 	return Pow(p, 2)

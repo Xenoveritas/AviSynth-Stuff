@@ -53,6 +53,10 @@ Provides a pixelation effect, similar to the effect a ton of SNES games use.
 
 Filters for speeding up a clip without adjusting the pitch of the sound.
 
+## Transitions.avsi
+
+Simple transitions from one clip to another.
+
 ## TASBlend.avsi
 
 An implementation of the [TASBlend](http://tasvideos.org/EncodingGuide/TASBlend.html)
