@@ -7,6 +7,8 @@ Something Awful.
 
 It may also prove useful to some other people. There's not a lot here right now.
 
+Check out the `Examples` directory for examples of using some of the scripts.
+
 ## Plugins
 
 `xvplugins` is simply a bunch of custom AviSynth stuff that proved impossible to
@@ -33,6 +35,10 @@ how long something takes.
 
 You could also just use the built-in `ShowTime` AviSynth function, but this can
 be used to make something that looks somewhat nicer.
+
+## Easings.avsi
+
+A port of jQuery UI's port of [Robert Panning's easings](http://easings.net/).
 
 ## LayerFadeIO.avsi
 
