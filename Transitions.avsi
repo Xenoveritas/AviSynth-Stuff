@@ -100,18 +100,14 @@ function CreateTransition(clip first, clip second, int frames, clip background, 
 			first_trans,second_trans,easing,0.0, \
 			first_trans,second_trans,easing,1.0)
 	# Deal with audio over the transition.
+	# FIXME: I'd absolutely love to have the audio follow the easing function,
+	# but I can't at all come up with a way to do it.
 	transition = HasAudio(first) && HasAudio(second) ? \
 		AudioDub(transition, Dissolve(first_trans, second_trans, frames)) : \
 		transition
 	return first.Trim(0, first.FrameCount()-frames-1) + \
 		transition + \
 		second.Trim(frames,0)
-}
-
-# Utility to clamp a value into a range.
-# This is simply Min(vMax, Max(vMin, v)) but reads slightly less weirdly.
-function Clamp(float v, float vMin, float vMax) {
-	return Min(vMax, Max(vMin, v))
 }
 
 # Generic assertions that apply to all transitions

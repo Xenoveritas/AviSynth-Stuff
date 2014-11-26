@@ -24,6 +24,16 @@ games. Provides utilities for showing one or both of the DS's screens as well as
 transitioning between various views. Check out the [usage guide](http://lpix.org/sslptest/index.php?id=10443)
 for details on how to use it.
 
+## Easings.avsi
+
+A port of jQuery UI's port of [Robert Panning's easings](http://easings.net/).
+Every easing shown at that site is supported as an AviSynth function that can
+be called with a value from 0.0-1.0 and returns an appropriate value as shown
+on the [easings.net](http://easings.net/) website. (Note that for some of the
+easing functions, this value is actually outside the 0.0-1.0 range! A utility
+function called "Clamp" can be used to clamp values into the 0.0-1.0 range for
+cases where this doesn't make sense.)
+
 ## Timer.avsi
 
 The `Timer.avsi` include that creates a timer. For an example of how to use it,
@@ -35,10 +45,6 @@ how long something takes.
 
 You could also just use the built-in `ShowTime` AviSynth function, but this can
 be used to make something that looks somewhat nicer.
-
-## Easings.avsi
-
-A port of jQuery UI's port of [Robert Panning's easings](http://easings.net/).
 
 ## LayerFadeIO.avsi
 

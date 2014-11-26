@@ -35,6 +35,14 @@
 # EasingLinear, EaseInLinear, EaseOutLinear, EaseInOutLinear
 # (Although in the case of linear, they all do the exact same thing!)
 
+# Utility to clamp a value into a range. By default this clamps to 0.0-1.0,
+# which can be useful for certain transitions.
+#
+# This is simply Min(vMax, Max(vMin, v)) but reads slightly less weirdly.
+function Clamp(float v, float "vMin", float "vMax") {
+	return Min(Default(vMax, 1.0), Max(Default(vMin, 0.0), v))
+}
+
 function EasingLinear(float p) {
 	return p
 }
