@@ -186,6 +186,18 @@ function WipeDown(clip first, clip second, int frames, string "easing", int "hei
 	return Wipe(first, second, frames, 0, 1, easing, height)
 }
 
+# The original intention was to load a static gradient that went from 1-254 and
+# just BilinearResize that as necessary. Sadly, ImageReader/ImageSource load
+# relative to the "who even knows" directory (the current directory of
+# whatever's loading the AVS maybe?), and it's impossible to get the current
+# script directory, so instead we generate using a loop.
+# Oh, but AviSynth doesn't do THAT either so enjoy this recursive, many-filtered
+# monstrosity instead.
+#
+# (OK, so it is conceptually possible to get the current script path, you can do
+# magic by *purposely throwing an exception and doing string magic to get the
+# filename* but .. uh... no.)
+#
 # I wonder what the max recursion depth possible in AviSynth is?
 function TransitionsGradientStackDestroyer(clip c, int w, int h, int x) {
 	color = (255*(x+1))/(w+1)
@@ -214,6 +226,8 @@ function CreateHorizontalGradientMask(int width, int height, int gradient_width)
 	Assert(width > 0 && height > 0, "Width/height must be at least 1!")
 	Assert(gradient_width >= 0, "Gradient width must be at least 0")
 	# Ignore the gradient for now
+	# (Length=1 is a performance hack - basically, the frame should be generated
+	# *once* and then cached and reused)
 	rv = BlankClip(length=1, width=width*2+gradient_width, height=height, pixel_type="RGB32", color=$FF000000)
 	right = BlankClip(length=1, width=width, height=height, pixel_type="RGB32", color=$FFFFFFFF)
 	rv = rv.Layer(right, "add", x=(width+gradient_width))
@@ -232,11 +246,11 @@ function Wipe_anim(clip mask, clip first, clip second, string easing, int dx, in
 	t = Easing(easing, t)
 	# Wipe moves the entire mask from 0-(mask.width()-second.width())
 	x = dx == 0 ? 0 : Round(\
-	(mask.Width()-second.Width()) * \
-	(dx < 0 ? t : (1-t)))
+		(mask.Width()-second.Width()) * \
+		(dx < 0 ? t : (1-t)))
 	y = dy == 0 ? 0 : Round(\
-	(mask.Height()-second.Height()) * \
-	(dy < 0 ? t : (1-t)))
+		(mask.Height()-second.Height()) * \
+		(dy < 0 ? t : (1-t)))
 	# We don't actually "move" the mask - instead, we crop it as necessary
 	mask = mask.Crop(x, y, second.Width(), second.Height())
 	return first.Layer(Mask(second,mask), "add")
