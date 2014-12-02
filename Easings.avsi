@@ -48,7 +48,6 @@ function Clamp(float v, float "vMin", float "vMax") {
 # you haven't put in anything invalid, so this function doesn't bother trying
 # to do that.
 function Easing(string f, float p) {
-	f = StrLen(f) < 4 || LeftStr(f, 4) != "Ease" ? "Ease" + f : f
 	return Eval(f + "(" + String(p) + ")")
 }
 
