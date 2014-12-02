@@ -43,6 +43,15 @@ function Clamp(float v, float "vMin", float "vMax") {
 	return Min(Default(vMax, 1.0), Max(Default(vMin, 0.0), v))
 }
 
+# Utility function for calling an easing function by name.
+# Note that there doesn't appear to be any way to sanitize a string to ensure
+# you haven't put in anything invalid, so this function doesn't bother trying
+# to do that.
+function Easing(string f, float p) {
+	f = StrLen(f) < 4 || LeftStr(f, 4) != "Ease" ? "Ease" + f : f
+	return Eval(f + "(" + String(p) + ")")
+}
+
 function EasingLinear(float p) {
 	return p
 }
