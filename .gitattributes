@@ -2,9 +2,13 @@
 * text=auto
 
 # AviSynth stuff should really be using Windows line endings
-
 *.avs text eol=crlf
 *.avsi text eol=crlf
+
+# Leave Visual Studio files alone
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
 
 # Binary files
 *.jpg binary
@@ -12,7 +16,6 @@
 
 # Custom for Visual Studio
 *.cs     diff=csharp
-*.sln text eol=crlf
 
 # Standard to msysgit
 *.doc	 diff=astextplain
