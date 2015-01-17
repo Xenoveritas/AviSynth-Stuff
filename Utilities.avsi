@@ -11,3 +11,14 @@ function AudioToClip(clip audio, float "fps") {
 			length=Floor(audio.AudioLengthF() / audio.AudioRate())*fps \
 		), audio)
 }
+
+# Adds/removes frames from the video to match the audio length (via ChangeFPS).
+# c    the clip to match audio and video lengths
+function VideoLengthToAudioLength(clip c) {
+	audio_length = c.AudioLengthF() / c.AudioRate()
+	# Calculate the "correct" framerate for the audio rate
+	fps = c.FrameCount() / audio_length
+	# And apply it
+	return ChangeFPS(AssumeFPS(c, fps), \
+		c.FrameRateNumerator(), c.FrameRateDenominator())
+}
