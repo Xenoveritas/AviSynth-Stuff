@@ -1,22 +1,30 @@
-# The default value for the blend argument. The default default is true.
+#: .. data:: global SNESPixelEffectBlend = true
+#:
+#:   The default value for the blend argument. The default default is true.
 global SNESPixelEffectBlend = true
-# The default value for the center argument. The default default is false.
+#: .. data:: global SNESPixelEffectCenter = false
+#:
+#:   The default value for the center argument. The default default is false.
 global SNESPixelEffectCenter = false
 
-# Do an SNES pixelation effect on the given clip.
-#
-# c - the clip to do the effect on. Currently, this clip MUST be RGB. (This is
-#     due to chroma subsampling otherwise screwing up the effect on odd pixel
-#     sizes.)
-# size - the size of pixels (must be less than or equals to the smaller input
-#    clip dimension)
-# blend - when true, individual pixels are "blended" together to form a single
-#    large pixel. When false, a single pixel is chosen and expanded to be the
-#    larger pixel. (False is more true to the SNES, true probably looks better.)
-#    Default is the value of the global SNESPixelEffectBlend.
-# center - when true, "centers" the left-most pixel. This is probably a
-#    mis-feature and doesn't really work when "blend" is true, but whatever.
-#    Default is the value of the global SNESPixelEffectCenter.
+#: .. function:: SNESPixelEffect(c, size[, blend[, center]])
+#:
+#:    :param clip c: the clip to pixelate. Currently, this clip MUST be RGB.
+#:        (This is due to chroma subsampling otherwise screwing up the effect on
+#:        odd pixel sizes.)
+#:    :param int size: the size of pixels (must be less than or equal to the
+#:        smaller input clip dimension)
+#:    :param bool blend: when ``true``, individual pixels are "blended" together
+#:        to form a single large pixel. When false, a single pixel is chosen and
+#:        expanded to be the larger pixel. (``false`` is more true to the SNES,
+#:        ``true`` probably looks better.) The default is the value of the
+#:        global ``SNESPixelEffectBlend``.
+#:    :param bool center: when ``true``, "centers" the left-most pixel. This is
+#:        probably a mis-feature and doesn't really work when "blend" is true,
+#:        but whatever. Default is the value of the global
+#:        ``SNESPixelEffectCenter``.
+#:
+#:    Do an SNES pixelation effect on the given clip.
 function SNESPixelEffect(clip c, int size, bool "blend", bool "center") {
     Assert(size > 0, "Step must be greater than 0")
     Assert(size <= Min(c.Width(), c.Height()), \

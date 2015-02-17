@@ -1,27 +1,34 @@
-#
-# Create an overlay on top of an existing clip that is a timer
-#
-# See Timer and TimerWithMillis for usage.
-#
+#:
+#: Create an overlay on top of an existing clip that is a timer.
+#:
 
-# Overlay the given video with a timer, using the given information.
-#
-# The timer clip should be an image clip (as only the first frame will be used
-# - I think), which contains each of the digits starting at 0 and ending at 9,
-# and then a colon to use to separate hours/minutes/seconds.
-#
-# video         the video to overlay the timer on top of
-# timer         a clip to use for the timer digits
-# x, y          the x, y coordinates (defaults to 0, 0)
-# start_frame   the first frame to display the timer on
-# end_frame     the last frame to end the timer on
-# colon_width   if specified, the width of the colon
-# use_dashes    timer contains 12 glyphs, the 12th is a dash to use before the
-#               timer starts (default false) - the dash is always the width of
-#               a digit.
-# type          either "MS" to only show minutes/seconds or "HMS" to show
-#               hours/minutes/seconds - default is based on how much time is
-#               in the video
+#: .. function:: Timer(video, timer, x, y, start_frame, end_frame, colon_width, use_dashes, type)
+#:
+#:    :param clip video: the video to overlay the timer on top of
+#:    :param clip timer: a clip to use for the timer digits
+#:    :param int x, y: the x, y coordinates (defaults to 0, 0)
+#:    :param int start_frame: the first frame to display the timer on (defaults
+#:      to 0)
+#:    :param int end_frame: the last frame to end the timer on (defaults to the
+#:      ``video``'s ``FrameCount``)
+#:    :param int colon_width: the width of the colon glyph, otherwise assumed
+#:      to be the same as the digits
+#:    :param bool use_dashes: indicates that the timer contains 12 glyphs, the
+#:      12th is a dash to use before the timer starts. The dash is always the
+#:      width of a digit as it replaces the digits. (Defaults to ``false``)
+#:    :param string type: either ``"MS"`` to only show minutes/seconds or
+#:      ``"HMS"`` to show hours/minutes/seconds. Default is ``"MS"`` if the
+#:      time span from ``start`` to ``end`` is less than an hour, ``"HMS"`` if
+#:      it is an hour or more.
+#:
+#:    Overlay the given video with a timer, using the given information.
+#:
+#:    The timer clip should be an image clip (as only the first frame will be used
+#:    - I think), which contains each of the digits starting at 0 and ending at 9,
+#:    and then a colon to use to separate hours/minutes/seconds.
+#:
+#:    If ``use_dashes`` is ``true`` then the timer image should be 0-9, the dash,
+#:    and finally the colon.
 function Timer(clip video, clip timer, int "x", int "y", \
 	int "start_frame", int "end_frame", int "colon_width", bool "use_dashes", \
 	string "type") {
@@ -47,26 +54,39 @@ function Timer(clip video, clip timer, int "x", int "y", \
 		timer, end_frame-start_frame, digit_width, colon_width, x, y)
 }
 
-# Overlay the given video with a timer, using the given information.
-#
-# The timer clip should be an image clip (as only the first frame will be used
-# - I think), which contains each of the digits starting at 0 and ending at 9,
-# and then a colon to use to separate hours/minutes/seconds.
-#
-# video         the video to overlay the timer on top of
-# timer         a clip to use for the timer digits
-# timer_ms      a clip to use for timer digits showing milliseconds
-# x, y          the x, y coordinates (defaults to 0, 0)
-# start_frame   the first frame to display the timer on
-# end_frame     the last frame to end the timer on
-# colon_width   if specified, the width of the colon
-# colon_width_ms if specified, the width of the colon for the MS display
-# use_dashes    timer contains 12 glyphs, the 12th is a dash to use before the
-#               timer starts (default false) - the dash is always the width of
-#               a digit.
-# type          either "MS" to only show minutes/seconds or "HMS" to show
-#               hours/minutes/seconds - default is based on how much time is
-#               in the video
+#: .. function:: TimerWithMillis(video, timer, timer_ms, x, y, start_frame, end_frame, colon_width, colon_width_ms, use_dashes, type)
+#:
+#:    :param clip video: the video to overlay the timer on top of
+#:    :param clip timer: a clip to use for the timer digits
+#:    :param clip timer_ms: a clip to use for the timer digits
+#:    :param int x, y: the x, y coordinates (defaults to 0, 0)
+#:    :param int start_frame: the first frame to display the timer on (defaults
+#:      to 0)
+#:    :param int end_frame: the last frame to end the timer on (defaults to the
+#:      ``video``'s ``FrameCount``)
+#:    :param int colon_width: the width of the colon glyph, otherwise assumed
+#:      to be the same as the digits
+#:    :param int colon_width_ms: the width of the colon glyph for the
+#:      milliseconds digits, otherwise assumed to be the same as the
+#:      millisecond digits
+#:    :param bool use_dashes: indicates that the timer contains 12 glyphs, the
+#:      12th is a dash to use before the timer starts. The dash is always the
+#:      width of a digit as it replaces the digits. (Defaults to ``false``)
+#:    :param string type: either ``"MS"`` to only show minutes/seconds or
+#:      ``"HMS"`` to show hours/minutes/seconds. Default is ``"MS"`` if the
+#:      time span from ``start`` to ``end`` is less than an hour, ``"HMS"`` if
+#:      it is an hour or more.
+#:
+#:    Overlay the given video with a timer, using the given information.
+#:
+#:    The timer clip should be an image clip (as only the first frame will be used
+#:    - I think), which contains each of the digits starting at 0 and ending at 9,
+#:    and then a colon to use to separate hours/minutes/seconds. The millisecond
+#:    image can be a different size to allow milliseconds to be smaller than the
+#:     main digits.
+#:
+#:    If ``use_dashes`` is ``true`` then both timer images should be 0-9, the dash,
+#:    and finally the colon.
 function TimerWithMillis(clip video, clip timer, clip timer_ms, int "x", int "y", \
 	int "start_frame", int "end_frame", int "colon_width", int "colon_width_ms", bool "use_dashes", \
 	string "type") {

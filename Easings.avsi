@@ -1,52 +1,74 @@
-#
-# This is a port of the jQuery UI easings, which are licensed under the MIT
-# license. So I guess this is too.
-#
-# The jQuery easings are originally from Robert Panner (http://www.easings.net).
-#
+#:
+#: This is a port of the jQuery UI easings, which are licensed under the MIT
+#: license. So I guess this is too.
+#:
+#: The jQuery easings are originally from Robert Panner (http://www.easings.net).
+#:
 
-# Easings all take a value from 0.0-1.0. They then return a value that's
-# generally from 0.0-1.0 (although it may be outside that range). All easings
-# should return 0.0 when given 0.0 and 1.0 when given 1.0 but beyond those
-# restrictions may return anything for values in between.
-#
-# For a live demo of the easings in your browser, see easings.net, or take a
-# look at Examples\Easings.avs to see these effects.
+#: Easings all take a value from 0.0-1.0. They then return a value that's
+#: generally from 0.0-1.0 (although it may be outside that range). All easings
+#: should return 0.0 when given 0.0 and 1.0 when given 1.0 but beyond those
+#: restrictions may return anything for values in between.
+#:
+#: For a live demo of the easings in your browser, see easings.net, or take a
+#: look at ``Examples\Easings.avs`` to see these effects.
 
-# The following easings are defined:
-#
-# Linear
-# Quad
-# Cubic
-# Quint
-# Expo
-# Sine
-# Circ
-# Elastic
-# Back
-# Bounce
-#
-# Each easing comes with four types:
-# Easing<NAME>, EaseIn<NAME> (these are identical)
-# EaseOut<NAME> (the inverse of EaseIn)
-# EaseInOut<NAME> (does EaseIn for the first half, then EaseOut for the second)
-#
-# So for Linear, the following functions are available:
-# EasingLinear, EaseInLinear, EaseOutLinear, EaseInOutLinear
-# (Although in the case of linear, they all do the exact same thing!)
+#: The following easings are defined:
+#:
+#: * Linear
+#: * Quad
+#: * Cubic
+#: * Quint
+#: * Expo
+#: * Sine
+#: * Circ
+#: * Elastic
+#: * Back
+#: * Bounce
+#:
+#: Each easing comes with four types:
+#:
+#: * Easing<NAME>, EaseIn<NAME> (these are identical)
+#: * EaseOut<NAME> (the inverse of EaseIn)
+#: * EaseInOut<NAME> (does EaseIn for the first half, then EaseOut for the second)
+#:
+#: So for Linear, the following functions are available:
+#:
+#: * ``EasingLinear``
+#: * ``EaseInLinear``
+#: * ``EaseOutLinear``
+#: * ``EaseInOutLinear``
+#:
+#: (Although in the case of linear, they all do the exact same thing!)
 
-# Utility to clamp a value into a range. By default this clamps to 0.0-1.0,
-# which can be useful for certain transitions.
-#
-# This is simply Min(vMax, Max(vMin, v)) but reads slightly less weirdly.
+#: .. function:: Clamp(v, vMin=0.0, vMax=1.0)
+#:
+#:   :param float v: the value
+#:   :param float vMin: the minimum allowed value, defaults to 0.0
+#:   :param float vMax: the maximum allowed value, defaults to 1.0
+#:   :returns: the given value clamped to the given range
+#:
+#:   Utility to clamp a value into a range. By default this clamps to 0.0-1.0,
+#:   which can be useful for certain transitions.
+#:
+#:   This is simply ``Min(vMax, Max(vMin, v))`` but reads slightly less weirdly.
 function Clamp(float v, float "vMin", float "vMax") {
 	return Min(Default(vMax, 1.0), Max(Default(vMin, 0.0), v))
 }
 
-# Utility function for calling an easing function by name.
-# Note that there doesn't appear to be any way to sanitize a string to ensure
-# you haven't put in anything invalid, so this function doesn't bother trying
-# to do that.
+#: .. function:: Easing(name, value)
+#:
+#:   :param string name: the name of the easing function (one of those listed
+#:      above: e.g., ``"EaseInSine"`` or ``"EaseInOutBounce"``)
+#:   :param float value: the value (between 0.0 and 1.0 inclusive) to use
+#:   :returns: a value representing the current easing value. This may be outside
+#:      the 0.0-1.0 range for some easings.
+#:
+#:   Utility function for calling an easing function by name.
+#:   Note that there doesn't appear to be any way to sanitize a string to ensure
+#:   you haven't put in anything invalid, so this function doesn't bother trying
+#:   to do that.
+#:
 function Easing(string f, float p) {
 	return Eval(f + "(" + String(p) + ")")
 }

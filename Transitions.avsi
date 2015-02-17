@@ -1,15 +1,17 @@
-#
-# This contains several common transitions to move between clips.
-#
-# These transitions accept an "easing" function which determines how the
-# transition applies. See Easings.avsi for the complete list of easings.
+#:
+#: This contains several common transitions to move between clips.
+#:
+#: These transitions accept an "easing" function which determines how the
+#: transition applies. See Easings.avsi for the complete list of easings.
 
 Import("Easings.avsi")
 
-# Identical to Dissolve (mostly) except uses the given easing function.
-# Unlike the rest of panning transitions, this clamps the easing function to the
-# 0..1 range. (Values less than 0 are treated as 0, greater than 1 are treated
-# as 1.)
+#: .. function:: DissolveEasing(first, second, frames, easing)
+#:
+#:   Identical to Dissolve (mostly) except uses the given easing function.
+#:   Unlike the rest of panning transitions, this clamps the easing function to
+#:   the 0..1 range. (Values less than 0 are treated as 0, greater than 1 are
+#:   treated as 1.)
 function DissolveEasing(clip first, clip second, int frames, string easing) {
 	return CreateMovingTransition(first, second, BlankClip(first, length=frames), frames, easing, 0, 0, "Dissolve_anim")
 }

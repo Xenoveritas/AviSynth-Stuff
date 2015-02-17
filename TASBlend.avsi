@@ -1,17 +1,20 @@
-# Implementation of the "TASBlend" filter, based on the filter described at
-# http://tasvideos.org/EncodingGuide/TASBlend.html but with some additional
-# comments and features.
-#
-# The resulting clip will be "TAS blended" together and therefore be at exactly
-# half the input framerate.
-#
-# c       the clip to blend
-# ratio   the ratio of the first frame compared to the second, defaults to
-#         2/3rds.
-# assertEven  when true, check to make sure there are an even number of frames.
-#             This is necessary if you want to make sure that you're not
-#             potentially desyncing by a single frame if you're combining
-#             a blended clip with an unblended clip.
+#: Implementation of the "TASBlend" filter, based on the filter described at
+#: http://tasvideos.org/EncodingGuide/TASBlend.html but with some additional
+#: comments and features.
+#:
+#: .. function:: TASBlend(c, ratio=0.6666, assertEven=False)
+#:
+#:     :param clip c: the clip to blend
+#:     :param float ratio: the ratio of the first frame compared to the second,
+#:        defaults to 2/3rds.
+#:     :param bool assertEven: when ``true``, check to make sure there are an
+#:        even number of frames. This is necessary if you want to make sure that
+#:        you're not potentially desyncing by a single frame if you're combining
+#:        a blended clip with an unblended clip.
+#:
+#:    The resulting clip will be "TAS blended" together and therefore be at exactly
+#:    half the input framerate.
+#:
 function TASBlend(clip c, float "ratio", bool "assertEven") {
 	ratio = Default(ratio, 2.0/3.0)
 	Assert((!Default(assertEven, False)) || c.FrameCount() % 2 == 0, "Frame count " + String(c.FrameCount()) + " is not even, either set assertEven=false or trim frames. (Otherwise you risk a single frame desync.)")
