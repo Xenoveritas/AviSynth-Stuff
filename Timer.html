@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Timer</title>
+<script type="text/javascript"><!--
+
+var makeCheckbox = (function() {
+    var id = 0;
+
+    return function(form, label) {
+        var checkbox = document.createElement('input');
+        checkbox.setAttribute("type", "checkbox");
+        checkbox.setAttribute("id", "chkbox-" + (++id));
+        var l = document.createElement('label');
+        l.setAttribute("for", "chkbox-" + id);
+        l.appendChild(checkbox);
+        l.appendChild(document.createTextNode(label));
+        form.appendChild(l);
+        return checkbox;
+    };
+})();
+
+function makeOption(name, value) {
+    if (arguments.length < 2)
+        value = name;
+    var option = document.createElement("option");
+    option.setAttribute('value', value);
+    option.appendChild(document.createTextNode(name));
+    return option;
+}
+
+function DigitGenerator(parent) {
+    this.canvas = document.createElement('canvas');
+    this.ctx = (typeof this.canvas.getContext == 'function') ? this.canvas.getContext('2d') : null;
+    if (this.ctx == null) {
+        var error = document.createElement('p');
+        error.appendChild(document.createTextNode('Your browser does not support HTML 5 <canvas>.'));
+        parent.appendChild(error);
+        return;
+    }
+    var p = document.createElement('p');
+    p.appendChild(document.createTextNode('The digit generator generates a sample set of digits that can be used within the timer. Your browser should allow you to save the image as a PNG.'));
+    parent.appendChild(p);
+    var form = document.createElement('form');
+    form.setAttribute("method", "GET");
+    form.setAttribute("action", "");
+    parent.appendChild(form);
+    this.font = document.createElement('input');
+    this.font.setAttribute('type', 'text');
+    this.font.setAttribute('placeholder', 'Font name');
+    this.font.setAttribute('size', '24');
+    this.font.setAttribute('value', 'Tahoma');
+    form.appendChild(document.createTextNode('Font: '));
+    form.appendChild(this.font);
+    form.appendChild(document.createTextNode(' Size: '));
+    this.fontSize = document.createElement('input');
+    this.fontSize.setAttribute('type', 'number');
+    this.fontSize.setAttribute('placeholder', 'Size');
+    this.fontSize.setAttribute('size', '3');
+    this.fontSize.setAttribute('value', '32');
+    form.appendChild(this.fontSize);
+    form.appendChild(document.createTextNode(' Color: '));
+    this.color = document.createElement('input');
+    this.color.setAttribute('type', 'color');
+    this.color.setAttribute('placeholder', 'Color');
+    this.color.setAttribute('size', '7');
+    this.color.setAttribute('value', '#FFFFFF');
+    form.appendChild(this.color);
+    form.appendChild(document.createElement('br'));
+    this.includeDash = makeCheckbox(form, 'Include dashes (for generating --:-- times)');
+    form.appendChild(document.createElement('br'));
+    this.includeMS = makeCheckbox(form, 'Also generate milliseconds image');
+    form.appendChild(document.createTextNode(' of size: '));
+    this.millisFontSize = document.createElement('input');
+    this.millisFontSize.setAttribute('type', 'number');
+    this.millisFontSize.setAttribute('placeholder', 'ms Size');
+    this.millisFontSize.setAttribute('size', '3');
+    this.millisFontSize.setAttribute('value', '16');
+    form.appendChild(this.millisFontSize);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(document.createTextNode('Millisecond separator:'));
+    this.millisSeparator = document.createElement("select");
+    this.millisSeparator.appendChild(makeOption("Period (.)", '.'));
+    this.millisSeparator.appendChild(makeOption("Colon (:)", ':'));
+    this.millisSeparator.appendChild(makeOption("None", ''));
+    form.appendChild(this.millisSeparator);
+    form.appendChild(document.createElement('br'));
+    var submit = document.createElement('button');
+    form.appendChild(submit);
+    submit.appendChild(document.createTextNode('Generate'));
+    form.onsubmit = (function(me) {
+        return function() {
+            try {
+                me.generateDigits();
+            } catch (ex) {
+                console.log(ex);
+                alert("An error occurred: " + ex);
+            }
+            return false;
+        };
+    })(this);
+    var div = document.createElement('div');
+    div.style.backgroundColor = 'rgb(128, 128, 128)';
+    div.style.color = 'rgb(192, 192, 192)';
+    div.style.padding = '16px';
+    parent.appendChild(div);
+    var h3 = document.createElement('h3');
+    h3.appendChild(document.createTextNode('Digits Image'));
+    h3.style.margin = '0';
+    h3.style.padding = '0 0 8px 0';
+    div.appendChild(h3);
+    div.appendChild(this.canvas);
+    div = document.createElement('div');
+    div.style.backgroundColor = 'rgb(192, 192, 192)';
+    div.style.color = 'rgb(128, 128, 128)';
+    div.style.padding = '16px';
+    parent.appendChild(div);
+    var h3 = document.createElement('h3');
+    h3.appendChild(document.createTextNode('Milliseconds Digits Image'));
+    h3.style.margin = '0';
+    h3.style.padding = '0 0 8px 0';
+    div.appendChild(h3);
+    div.appendChild(this.millisCanvas = document.createElement('canvas'));
+    this.millisCtx = this.millisCanvas.getContext('2d');
+    this.millisDiv = div;
+    div.style.display = 'none';
+    this.code = document.createElement('div');
+    parent.appendChild(this.code);
+    var text = "Click on Generate to generate the digits image."
+    this.ctx.font = '20px Helvetica';
+    this.canvas.width = this.ctx.measureText(text).width;
+    this.canvas.height = 20;
+    // Changing the size resets the context.
+    this.ctx.font = '20px Helvetica';
+    this.ctx.textBaseline = 'top';
+    this.ctx.textAlign = 'left';
+    this.ctx.fillText(text, 0, 0);
+}
+
+DigitGenerator.prototype = {
+    generateDigits: function() {
+        var font = this.font.value;
+        var size = Number(this.fontSize.value, 10);
+        if (isNaN(size)) {
+            alert("Please use a proper number for the size.");
+            return;
+        }
+        var color = this.color.value;
+        var digits = '0123456789';
+        var colon = ':';
+        if (this.includeDash.checked)
+            digits += '-';
+        var colonWidth = this._renderDigits(':', this.canvas, this.ctx, font, size, color, digits);
+        var includeMS = this.includeMS.checked, msColonWidth;
+        if (includeMS) {
+            this.millisDiv.style.display = 'block';
+            var msSize = Number(this.millisFontSize.value, 10);
+            if (isNaN(msSize)) {
+                alert("Please use a proper number for the millisecond size.");
+            } else {
+                msColonWidth = this._renderDigits(this.millisSeparator.value, this.millisCanvas, this.millisCtx, font, msSize, color, digits);
+            }
+        } else {
+            this.millisDiv.style.display = 'none';
+        }
+        var code = [ 'Timer' ];
+        if (includeMS) {
+            code.push('WithMillis');
+        }
+        code.push('(video, digits, ');
+        if (includeMS) {
+            code.push('millisDigits, ');
+        }
+        code.push('colon_width=', colonWidth);
+        if (includeMS) {
+            code.push(', colon_width_ms=', msColonWidth);
+        }
+        if (this.includeDash.checked) {
+            code.push(', use_dashs=true');
+        }
+        code.push(')');
+        this.code.innerHTML = code.join('');
+    },
+    _renderDigits: function(colon, canvas, ctx, font, size, color, digits) {
+        // Add the size to the font
+        font = size + 'px "' + font.replace('"', '\\"') + '"';
+        ctx.font = font;
+        var maxWidth = 0;
+        // Find the widest digit
+        for (var i = 0; i < digits.length; i++) {
+            maxWidth = Math.max(ctx.measureText(digits[i]).width, maxWidth);
+        }
+        // Round maxWidth up to the nearest integer
+        maxWidth = Math.ceil(maxWidth);
+        var colonWidth = 0;
+        if (colon.length > 0) {
+            // Also need to add the colon
+            colonWidth = Math.ceil(ctx.measureText(colon).width)
+        }
+        canvas.height = size;
+        canvas.width = maxWidth * digits.length + colonWidth;
+        // Apparently reseting the size resets the context.
+        ctx.font = font;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        // We want the digits to all be drawn such that they're in the same boxes
+        var xOffset = (maxWidth - 1) / 2;
+        for (var i = 0; i < digits.length; i++) {
+            ctx.fillText(digits[i], maxWidth * i + xOffset, 0);
+        }
+        if (colon.length > 0)
+            ctx.fillText(colon, maxWidth * digits.length + colonWidth / 2, 0);
+        return colonWidth;
+    }
+};
+
+//--></script>
+</head>
+<body onload="new DigitGenerator(document.getElementById('digit-generator'))">
+    <h1>Timer</h1>
+
+    <p>The Timer script allows you to generate timers using an image clip. You
+    can actually animate the digits if you so desire.</p>
+
+    <h2>Digit Image Generator</h2>
+
+    <noscript>You don't have JavaScript enabled. This page also contains a
+    simple HTML5 digit generator that generates digit images along with a
+    sample of using the script.</noscript>
+
+    <div id="digit-generator"><!-- Placeholder --></div>
+
+    <h2><code>Timer</code></h2>
+
+    <p><code>Timer(clip video, clip timer, int "x", int "y",
+    int "start_frame", int "end_frame", int "colon_width", bool "use_dashes",
+    string "type")</code></p>
+
+    <p>Overlay the given video with a timer, using the given information.</p>
+
+    <p>The timer clip should be an image clip (as only the first frame will be
+        used - I think), which contains each of the digits starting at 0 and
+        ending at 9, and then a colon to use to separate hours/minutes/seconds.</p>
+
+    <dl>
+        <dt><code>video</code></dt>
+        <dd>the video to overlay the timer on top of</dd>
+        <dt><code>timer</code><dt>
+        <dd>a clip to use for the timer digits</dd>
+        <dt><code>x, y</code></dt>
+        <dd>the x, y coordinates (defaults to 0, 0)</dd>
+        <dt><code>start_frame</code></dt>
+        <dd>the first frame to display the timer on</dd>
+        <dt><code>end_frame</code></dt>
+        <dd>the last frame to end the timer on</dd>
+        <dt><code>colon_width</code></dt>
+        <dd>if specified, the width of the colon</dd>
+        <dt><code>use_dashes</code></dt>
+        <dd>timer contains 12 glyphs, the 12th is a dash to use before the timer
+            starts (default false) - the dash is always the width of a digit.</dd>
+        <dt><code>type</code></dt>
+        <dd>either "MS" to only show minutes/seconds or "HMS" to show
+            hours/minutes/seconds - default is based on how much time is in the
+            video</dd>
+    </dl>
+
+    <h2><code>TimerWithMillis</code></h2>
+
+    <p><code>TimerWithMillis(clip video, clip timer, clip timer_ms, int "x", int "y",
+        int "start_frame", int "end_frame", int "colon_width", bool "use_dashes",
+        string "type")</code></p>
+
+    <p>Overlay the given video with a timer, using the given information.</p>
+
+    <p>The timer clip should be an image clip (as only the first frame will be
+        used - I think), which contains each of the digits starting at 0 and
+        ending at 9, and then a colon to use to separate hours/minutes/seconds.</p>
+
+    <dl>
+        <dt><code>video</code></dt>
+        <dd>the video to overlay the timer on top of</dd>
+        <dt><code>timer</code></dt>
+        <dd>a clip to use for the timer digits</dd>
+        <dt><code>timer_ms</code></dt>
+        <dd>a clip to use for timer digits showing milliseconds</dd>
+        <dt><code>x, y</code></dt>
+        <dd>the x, y coordinates (defaults to 0, 0)</dd>
+        <dt><code>start_frame</code></dt>
+        <dd>the first frame to display the timer on</dd>
+        <dt><code>end_frame</code></dt>
+        <dd>the last frame to end the timer on</dd>
+        <dt><code>colon_width</code></dt>
+        <dd>if specified, the width of the colon</dd>
+        <dt><code>colon_width_ms</code></dt>
+        <dd>if specified, the width of the colon for the MS display</dd>
+        <dt><code>use_dashes</code></dt>
+        <dd>timer contains 12 glyphs, the 12th is a dash to use before the timer
+            starts (default false) - the dash is always the width of a digit.</dd>
+        <dt><code>type</code></dt>
+        <dd>either "MS" to only show minutes/seconds or "HMS" to show
+            hours/minutes/seconds - default is based on how much time is in the
+            video</dd>
+    </dl>
+</body>
+</html>

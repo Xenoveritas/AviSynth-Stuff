@@ -37,7 +37,7 @@ cases where this doesn't make sense.)
 ## Timer.avsi
 
 The `Timer.avsi` include that creates a timer. For an example of how to use it,
-see the `Timer Example.avs` script.
+see the `Timer.avs` script in the `Examples` directory.
 
 It creates a timer that counts up as the clip goes on. It's mainly useful for
 running races, but may also be useful in instances where you want to display

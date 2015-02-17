@@ -60,6 +60,7 @@ function Timer(clip video, clip timer, int "x", int "y", \
 # start_frame   the first frame to display the timer on
 # end_frame     the last frame to end the timer on
 # colon_width   if specified, the width of the colon
+# colon_width_ms if specified, the width of the colon for the MS display
 # use_dashes    timer contains 12 glyphs, the 12th is a dash to use before the
 #               timer starts (default false) - the dash is always the width of
 #               a digit.
@@ -67,7 +68,7 @@ function Timer(clip video, clip timer, int "x", int "y", \
 #               hours/minutes/seconds - default is based on how much time is
 #               in the video
 function TimerWithMillis(clip video, clip timer, clip timer_ms, int "x", int "y", \
-	int "start_frame", int "end_frame", int "colon_width", bool "use_dashes", \
+	int "start_frame", int "end_frame", int "colon_width", int "colon_width_ms", bool "use_dashes", \
 	string "type") {
 	start_frame = Default(start_frame, 0)
 	end_frame = Default(end_frame, video.FrameCount()-1)
@@ -78,16 +79,21 @@ function TimerWithMillis(clip video, clip timer, clip timer_ms, int "x", int "y"
 	type = Default(type, ((end_frame - start_frame) / video.FrameRate()) < (60*60) ? "MS" : "HMS")
 	# Calculate digit width (timer is 10 digits plus the colon, plus optionally
 	# the dash)
-	digit_width = timer.Width()/(use_dashes ? 12 : 11)
-	colon_width = Default(colon_width, digit_width)
-	digit_width_ms = timer_ms.Width()/(use_dashes ? 12 : 11)
+	colon_width = Default(colon_width, timer.Width()/(use_dashes ? 12 : 11))
+	digit_width = (timer.Width()-colon_width)/(use_dashes ? 11 : 10)
+	Assert(digit_width > 0, "Digit width is too small (" + String(digit_width) + ")")
+	Assert(colon_width > 0, "Colon width is too small (" + String(colon_width) + ")")
+	colon_width_ms = Default(colon_width_ms, timer_ms.Width()/(use_dashes ? 12 : 11))
+	digit_width_ms = (timer_ms.Width()-colon_width_ms)/(use_dashes ? 11 : 10)
+	Assert(digit_width_ms > 0, "Millisecond digit width is too small (" + String(digit_width_ms) + ")")
+	Assert(colon_width_ms >= 0, "Millisecond colon width is too small (" + String(colon_width_ms) + ")")
 	# If there is no chance to use the dash, just disable it
 	use_dashes = use_dashes && start_frame > 0 ? use_dashes : false
 	return Animate(video, \
 		use_dashes ? start_frame-1 : start_frame, \
 		end_frame, "OverlayTimer" + type + "ms", \
-		timer, timer_ms, use_dashes ? -1 : 0, digit_width, colon_width, digit_width_ms, x, y, \
-		timer, timer_ms, end_frame-start_frame, digit_width, colon_width, digit_width_ms, x, y)
+		timer, timer_ms, use_dashes ? -1 : 0, digit_width, colon_width, digit_width_ms, colon_width_ms, x, y, \
+		timer, timer_ms, end_frame-start_frame, digit_width, colon_width, digit_width_ms, colon_width_ms, x, y)
 }
 
 function OverlayTimerDigit(clip video, clip timer, int digit, int digit_width, int x, int y) {
@@ -168,8 +174,9 @@ function OverlayTimerHMS(clip video, clip timer, int frame, int digit_width, \
 	return result
 }
 
-function OverlayTimerMSms(clip video, clip timer, clip timer_ms, int frame, int digit_width, \
-		int colon_width, int digit_width_ms, int x, int y) {
+function OverlayTimerMSms(clip video, clip timer, clip timer_ms, int frame, \
+		int digit_width, int colon_width, \
+		int digit_width_ms, int colon_width_ms, int x, int y) {
 	# First, convert frames into seconds
 	seconds = frame / video.FrameRate()
 	# Grab the milliseconds...
@@ -189,7 +196,6 @@ function OverlayTimerMSms(clip video, clip timer, clip timer_ms, int frame, int 
 	millis_10s = frame < 0 ? 11 : (millis - millis_100s*100) / 10
 	millis_1s = frame < 0 ? 11 : millis - millis_100s*100 - millis_10s*10
 	result = video
-	x = x + digit_width
 	result = OverlayTimerDigit(result, timer, minutes_10s, digit_width, x, y)
 	x = x + digit_width
 	result = OverlayTimerDigit(result, timer, minutes_1s, digit_width, x, y)
@@ -203,8 +209,8 @@ function OverlayTimerMSms(clip video, clip timer, clip timer_ms, int frame, int 
 	# And now for the millisecond part
 	y = y + timer.Height() - timer_ms.Height()
 	x = x + digit_width
-	result = OverlayTimerDigit(result, timer_ms, 10, digit_width_ms, x, y)
-	x = x + digit_width_ms
+	result = colon_width_ms > 0 ? OverlayTimerColon(result, timer_ms, digit_width_ms, colon_width_ms, x, y) : result
+	x = x + colon_width_ms
 	result = OverlayTimerDigit(result, timer_ms, millis_100s, digit_width_ms, x, y)
 	x = x + digit_width_ms
 	result = OverlayTimerDigit(result, timer_ms, millis_10s, digit_width_ms, x, y)
@@ -214,12 +220,14 @@ function OverlayTimerMSms(clip video, clip timer, clip timer_ms, int frame, int 
 	return result
 }
 
-function OverlayTimerHMSms(clip video, clip timer, clip timer_ms, int frame, int digit_width, \
-		int colon_width, int digit_width_ms, int x, int y) {
+function OverlayTimerHMSms(clip video, clip timer, clip timer_ms, int frame, \
+		int digit_width, int colon_width, \
+		int digit_width_ms, int colon_width_ms, \
+		int x, int y) {
 	# First, convert frames into seconds
 	seconds = frame / video.FrameRate()
 	# Grab the milliseconds...
-	millis = Floor((seconds * 1000) % 1000)
+	millis = Floor(seconds * 1000) % 1000
 	# ...and drop them from the seconds.
 	seconds = Floor(seconds)
 	# Calculate minutes...
@@ -257,8 +265,8 @@ function OverlayTimerHMSms(clip video, clip timer, clip timer_ms, int frame, int
 	# And now for the millisecond part
 	y = y + timer.Height() - timer_ms.Height()
 	x = x + digit_width
-	result = OverlayTimerDigit(result, timer_ms, 10, digit_width_ms, x, y)
-	x = x + digit_width_ms
+	result = colon_width_ms > 0 ? OverlayTimerColon(result, timer_ms, digit_width_ms, colon_width_ms, x, y) : result
+	x = x + colon_width_ms
 	result = OverlayTimerDigit(result, timer_ms, millis_100s, digit_width_ms, x, y)
 	x = x + digit_width_ms
 	result = OverlayTimerDigit(result, timer_ms, millis_10s, digit_width_ms, x, y)
