@@ -4,93 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Timer</title>
+<style type="text/css"><!--
+    div.digits, div.ms-digits {
+        padding: 16px;
+    }
+    div.digits {
+        background-color: #808080;
+        color: #C0C0C0;
+    }
+    div.ms-digits {
+        background-color: #C0C0C0;
+        color: #808080;
+    }
+    div.digits h3, div.ms-digits h3 {
+        margin: 0;
+        padding: 0 0 8px 0;
+    }
+    div.code {
+        font-family: monospace;
+        margin: 8px;
+        padding: 16px;
+        border: solid 1px #333;
+        color: #111;
+        background-color: #EEE;
+    }
+    input[type=number] {
+        width: 4em;
+    }
+--></style>
 <script type="text/javascript"><!--
 
-var makeCheckbox = (function() {
-    var id = 0;
-
-    return function(form, label) {
-        var checkbox = document.createElement('input');
-        checkbox.setAttribute("type", "checkbox");
-        checkbox.setAttribute("id", "chkbox-" + (++id));
-        var l = document.createElement('label');
-        l.setAttribute("for", "chkbox-" + id);
-        l.appendChild(checkbox);
-        l.appendChild(document.createTextNode(label));
-        form.appendChild(l);
-        return checkbox;
-    };
-})();
-
-function makeOption(name, value) {
-    if (arguments.length < 2)
-        value = name;
-    var option = document.createElement("option");
-    option.setAttribute('value', value);
-    option.appendChild(document.createTextNode(name));
-    return option;
-}
-
 function DigitGenerator(parent) {
-    this.canvas = document.createElement('canvas');
+    parent.style.display = 'block';
+    this.canvas = document.getElementById('digits-canvas');
     this.ctx = (typeof this.canvas.getContext == 'function') ? this.canvas.getContext('2d') : null;
     if (this.ctx == null) {
-        var error = document.createElement('p');
-        error.appendChild(document.createTextNode('Your browser does not support HTML 5 <canvas>.'));
-        parent.appendChild(error);
+        parent.innerHTML = '<p>Your browser does not support HTML 5 &lt;canvas&gt;.</p>';
         return;
     }
-    var p = document.createElement('p');
-    p.appendChild(document.createTextNode('The digit generator generates a sample set of digits that can be used within the timer. Your browser should allow you to save the image as a PNG.'));
-    parent.appendChild(p);
-    var form = document.createElement('form');
-    form.setAttribute("method", "GET");
-    form.setAttribute("action", "");
-    parent.appendChild(form);
-    this.font = document.createElement('input');
-    this.font.setAttribute('type', 'text');
-    this.font.setAttribute('placeholder', 'Font name');
-    this.font.setAttribute('size', '24');
-    this.font.setAttribute('value', 'Tahoma');
-    form.appendChild(document.createTextNode('Font: '));
-    form.appendChild(this.font);
-    form.appendChild(document.createTextNode(' Size: '));
-    this.fontSize = document.createElement('input');
-    this.fontSize.setAttribute('type', 'number');
-    this.fontSize.setAttribute('placeholder', 'Size');
-    this.fontSize.setAttribute('size', '3');
-    this.fontSize.setAttribute('value', '32');
-    form.appendChild(this.fontSize);
-    form.appendChild(document.createTextNode(' Color: '));
-    this.color = document.createElement('input');
-    this.color.setAttribute('type', 'color');
-    this.color.setAttribute('placeholder', 'Color');
-    this.color.setAttribute('size', '7');
-    this.color.setAttribute('value', '#FFFFFF');
-    form.appendChild(this.color);
-    form.appendChild(document.createElement('br'));
-    this.includeDash = makeCheckbox(form, 'Include dashes (for generating --:-- times)');
-    form.appendChild(document.createElement('br'));
-    this.includeMS = makeCheckbox(form, 'Also generate milliseconds image');
-    form.appendChild(document.createTextNode(' of size: '));
-    this.millisFontSize = document.createElement('input');
-    this.millisFontSize.setAttribute('type', 'number');
-    this.millisFontSize.setAttribute('placeholder', 'ms Size');
-    this.millisFontSize.setAttribute('size', '3');
-    this.millisFontSize.setAttribute('value', '16');
-    form.appendChild(this.millisFontSize);
-    form.appendChild(document.createElement('br'));
-    form.appendChild(document.createTextNode('Millisecond separator:'));
-    this.millisSeparator = document.createElement("select");
-    this.millisSeparator.appendChild(makeOption("Period (.)", '.'));
-    this.millisSeparator.appendChild(makeOption("Colon (:)", ':'));
-    this.millisSeparator.appendChild(makeOption("None", ''));
-    form.appendChild(this.millisSeparator);
-    form.appendChild(document.createElement('br'));
-    var submit = document.createElement('button');
-    form.appendChild(submit);
-    submit.appendChild(document.createTextNode('Generate'));
-    form.onsubmit = (function(me) {
+    this.font = document.getElementById('font');
+    this.fontSize = document.getElementById('size');
+    this.color = document.getElementById('color');
+    this.borderSize = document.getElementById('borderSize');
+    this.borderColor = document.getElementById('borderColor');
+    this.includeDash = document.getElementById('includeDash');
+    this.includeMS = document.getElementById('includeMS');
+    this.millisFontSize = document.getElementById('msSize');;
+    this.millisBorderSize = document.getElementById('msBorderSize');
+    this.millisSeparator = document.getElementById("msSeparator");
+    document.getElementById('digit-generator-form').onsubmit = (function(me) {
         return function() {
             try {
                 me.generateDigits();
@@ -101,45 +63,40 @@ function DigitGenerator(parent) {
             return false;
         };
     })(this);
-    var div = document.createElement('div');
-    div.style.backgroundColor = 'rgb(128, 128, 128)';
-    div.style.color = 'rgb(192, 192, 192)';
-    div.style.padding = '16px';
-    parent.appendChild(div);
-    var h3 = document.createElement('h3');
-    h3.appendChild(document.createTextNode('Digits Image'));
-    h3.style.margin = '0';
-    h3.style.padding = '0 0 8px 0';
-    div.appendChild(h3);
-    div.appendChild(this.canvas);
-    div = document.createElement('div');
-    div.style.backgroundColor = 'rgb(192, 192, 192)';
-    div.style.color = 'rgb(128, 128, 128)';
-    div.style.padding = '16px';
-    parent.appendChild(div);
-    var h3 = document.createElement('h3');
-    h3.appendChild(document.createTextNode('Milliseconds Digits Image'));
-    h3.style.margin = '0';
-    h3.style.padding = '0 0 8px 0';
-    div.appendChild(h3);
-    div.appendChild(this.millisCanvas = document.createElement('canvas'));
+    this.millisCanvas = document.getElementById('ms-digits-canvas');
     this.millisCtx = this.millisCanvas.getContext('2d');
-    this.millisDiv = div;
-    div.style.display = 'none';
-    this.code = document.createElement('div');
-    parent.appendChild(this.code);
+    this.millisDiv = this.millisCanvas.parentNode;
+    this.millisDiv.style.display = 'none';
+    this.sampleCanvas = document.getElementById('sample-canvas');
+    this.sampleCtx = this.sampleCanvas.getContext('2d');
+    this.sampleCanvas.parentNode.style.display = 'none';
+    this.code = document.getElementById('code');
     var text = "Click on Generate to generate the digits image."
-    this.ctx.font = '20px Helvetica';
+    this.ctx.font = '20px sans-serif';
     this.canvas.width = this.ctx.measureText(text).width;
     this.canvas.height = 20;
     // Changing the size resets the context.
-    this.ctx.font = '20px Helvetica';
+    this.ctx.font = '20px sans-serif';
     this.ctx.textBaseline = 'top';
     this.ctx.textAlign = 'left';
     this.ctx.fillText(text, 0, 0);
 }
 
 DigitGenerator.prototype = {
+    _debug: false,
+    _debugColors: [
+        'rgb(255,0,0)',    // 0
+        'rgb(255,128,0)',  // 1
+        'rgb(255,255,0)',  // 2
+        'rgb(0,255,0)',    // 3
+        'rgb(0,0,255)',    // 4
+        'rgb(128,0,255)',  // 5
+        'rgb(255,0,255)',  // 6
+        'rgb(0,0,0)',       // 7
+        'rgb(128,128,128)', // 8
+        'rgb(255,255,255)', // 9
+        'rgb(128,64,0)'     // -
+    ],
     generateDigits: function() {
         var font = this.font.value;
         var size = Number(this.fontSize.value, 10);
@@ -148,24 +105,33 @@ DigitGenerator.prototype = {
             return;
         }
         var color = this.color.value;
+        var borderSize = Number(this.borderSize.value, 10);
+        var borderColor = this.borderColor.value;
         var digits = '0123456789';
         var colon = ':';
-        if (this.includeDash.checked)
+        var includeDash = this.includeDash.checked;
+        if (includeDash)
             digits += '-';
-        var colonWidth = this._renderDigits(':', this.canvas, this.ctx, font, size, color, digits);
+        var colonWidth = this._renderDigits(':', this.canvas, this.ctx, font, size, color, borderSize, borderColor, digits);
         var includeMS = this.includeMS.checked, msColonWidth;
         if (includeMS) {
             this.millisDiv.style.display = 'block';
             var msSize = Number(this.millisFontSize.value, 10);
+            var msBorderSize = Number(this.millisBorderSize.value, 10);
             if (isNaN(msSize)) {
                 alert("Please use a proper number for the millisecond size.");
             } else {
-                msColonWidth = this._renderDigits(this.millisSeparator.value, this.millisCanvas, this.millisCtx, font, msSize, color, digits);
+                msColonWidth = this._renderDigits(this.millisSeparator.value, this.millisCanvas, this.millisCtx, font, msSize, color, msBorderSize, borderColor, digits);
             }
         } else {
             this.millisDiv.style.display = 'none';
         }
-        var code = [ 'Timer' ];
+        this._renderSample(colonWidth, includeDash, includeMS, msColonWidth);
+        var code = [ 'video = AviSource("Your video.avi")<br><br># Load digits:<br>digits = ImageSource("digits.png", pixel_type="RGB32")<br><br>' ];
+        if (includeMS) {
+            code.push('# Load millisecond digits<br>millisDigits = ImageSource("digits_millis.png", pixel_type="RGB32")<br><br>');
+        }
+        code.push('Timer');
         if (includeMS) {
             code.push('WithMillis');
         }
@@ -177,15 +143,28 @@ DigitGenerator.prototype = {
         if (includeMS) {
             code.push(', colon_width_ms=', msColonWidth);
         }
-        if (this.includeDash.checked) {
+        if (includeDash) {
             code.push(', use_dashs=true');
         }
         code.push(')');
         this.code.innerHTML = code.join('');
     },
-    _renderDigits: function(colon, canvas, ctx, font, size, color, digits) {
+    _generateFont: function(font, size) {
+        var m = /^\s*(".+")\s*$/.exec(font);
+        if (m) {
+            // If the user included the quotes for us, use as-is
+            return size + "px " + m[1];
+        }
+        if (/\s/.test(font)) {
+            // If there's whitespace, surround with quotes
+            return size + 'px "' + font.replace('"', '\\"') + '"';
+        } else {
+            return size + "px " + font;
+        }
+    },
+    _renderDigits: function(colon, canvas, ctx, font, size, color, borderSize, borderColor, digits) {
         // Add the size to the font
-        font = size + 'px "' + font.replace('"', '\\"') + '"';
+        font = this._generateFont(font, size);
         ctx.font = font;
         var maxWidth = 0;
         // Find the widest digit
@@ -194,26 +173,95 @@ DigitGenerator.prototype = {
         }
         // Round maxWidth up to the nearest integer
         maxWidth = Math.ceil(maxWidth);
+        // If we have a border, we need to include it too
+        if (borderSize > 0) {
+            maxWidth += borderSize * 2;
+        }
         var colonWidth = 0;
         if (colon.length > 0) {
             // Also need to add the colon
             colonWidth = Math.ceil(ctx.measureText(colon).width)
+            if (borderSize > 0) {
+                colonWidth += borderSize * 2;
+            }
         }
-        canvas.height = size;
+        canvas.height = size + borderSize * 2;
         canvas.width = maxWidth * digits.length + colonWidth;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         // Apparently reseting the size resets the context.
         ctx.font = font;
         ctx.fillStyle = color;
+        if (borderSize > 0) {
+            ctx.strokeStyle = borderColor;
+            ctx.lineWidth = borderSize * 2;
+        }
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
+        ctx.textBaseline = 'middle';
         // We want the digits to all be drawn such that they're in the same boxes
         var xOffset = (maxWidth - 1) / 2;
+        var y = canvas.height / 2;
         for (var i = 0; i < digits.length; i++) {
-            ctx.fillText(digits[i], maxWidth * i + xOffset, 0);
+            if (this._debug) {
+                ctx.fillStyle = this._debugColors[i];
+                ctx.fillRect(maxWidth * i, 0, maxWidth, canvas.height);
+                ctx.fillStyle = color;
+            }
+            if (borderSize > 0) {
+                ctx.strokeText(digits[i], maxWidth * i + xOffset, y);
+            }
+            ctx.fillText(digits[i], maxWidth * i + xOffset, y);
         }
-        if (colon.length > 0)
-            ctx.fillText(colon, maxWidth * digits.length + colonWidth / 2, 0);
+        if (colon.length > 0) {
+            if (borderSize > 0) {
+                ctx.strokeText(colon, maxWidth * digits.length + colonWidth / 2, y);
+            }
+            ctx.fillText(colon, maxWidth * digits.length + colonWidth / 2, y);
+        }
         return colonWidth;
+    },
+    /**
+     * Renders a digit as Timer might
+     */
+    _renderDigit: function(src, dest, x, y, digit, digitWidth) {
+        dest.drawImage(src, digitWidth * digit, 0, digitWidth, src.height, x, y, digitWidth, src.height);
+    },
+    /**
+     * Renders the colon as Timer might
+     */
+    _renderColon: function(src, dest, x, y, digits, digitWidth, colonWidth) {
+        dest.drawImage(src, digitWidth * digits, 0, colonWidth, src.height, x, y, colonWidth, src.height);
+    },
+    _renderSample: function(colonWidth, includeDash, includeMS, msColonWidth) {
+        var digitCount = (includeDash ? 11 : 10);
+        var digitWidth = (this.canvas.width - colonWidth) / digitCount, msDigitWidth;
+        if (includeMS) {
+            msDigitWidth = (this.millisCanvas.width - msColonWidth) / digitCount;
+        }
+        this.sampleCanvas.width = digitWidth * 4 + colonWidth + (includeMS ? msColonWidth + msDigitWidth * 3 : 0);
+        this.sampleCanvas.height = this.canvas.height;
+        this.sampleCtx.clearRect(0, 0, this.sampleCanvas.width, this.sampleCanvas.height);
+        this.sampleCanvas.parentNode.style.display = 'block';
+        var x = 0;
+        this._renderDigit(this.canvas, this.sampleCtx, x, 0, 1, digitWidth);
+        x += digitWidth;
+        this._renderDigit(this.canvas, this.sampleCtx, x, 0, 2, digitWidth);
+        x += digitWidth;
+        this._renderColon(this.canvas, this.sampleCtx, x, 0, digitCount, digitWidth, colonWidth);
+        x += colonWidth;
+        this._renderDigit(this.canvas, this.sampleCtx, x, 0, 4, digitWidth);
+        x += digitWidth;
+        this._renderDigit(this.canvas, this.sampleCtx, x, 0, 8, digitWidth);
+        if (includeMS) {
+            x += digitWidth;
+            var y = this.canvas.height - this.millisCanvas.height;
+            this._renderColon(this.millisCanvas, this.sampleCtx, x, y, digitCount, msDigitWidth, msColonWidth);
+            x += msColonWidth;
+            this._renderDigit(this.millisCanvas, this.sampleCtx, x, y, 9, msDigitWidth);
+            x += msDigitWidth;
+            this._renderDigit(this.millisCanvas, this.sampleCtx, x, y, 7, msDigitWidth);
+            x += msDigitWidth;
+            this._renderDigit(this.millisCanvas, this.sampleCtx, x, y, 5, msDigitWidth);
+        }
     }
 };
 
@@ -222,8 +270,7 @@ DigitGenerator.prototype = {
 <body onload="new DigitGenerator(document.getElementById('digit-generator'))">
     <h1>Timer</h1>
 
-    <p>The Timer script allows you to generate timers using an image clip. You
-    can actually animate the digits if you so desire.</p>
+    <p>The Timer script allows you to generate timers using an image clip.</p>
 
     <h2>Digit Image Generator</h2>
 
@@ -231,7 +278,71 @@ DigitGenerator.prototype = {
     simple HTML5 digit generator that generates digit images along with a
     sample of using the script.</noscript>
 
-    <div id="digit-generator"><!-- Placeholder --></div>
+    <div id="digit-generator" style="display: none;">
+        <!-- This gets revealed only if JavaScript is present -->
+        <p>The digit generator generates a sample set of digits that can be used
+        within the timer. Your browser should allow you to save the image as a
+        PNG.</p>
+        <form id="digit-generator-form" method="GET" action="">
+            <div>
+                <label for="font">Font:
+                    <input type="text" placeholder="font name" id="font" name="font" value="monospace">
+                </label>
+                <label for="size">Size:
+                    <input type="number" placeholder="size" id="size" name="size" size="4" value="32" min="1" max="99999" step="any">
+                </label>
+                <label for="color">Color:
+                    <input type="color" placeholder="color" id="color" name="color" value="#FFFFFF">
+                </label>
+                Border:
+                <input type="number" placeholder="border size" id="borderSize" name="borderSize" value="1" min="0" max="99999" step="any">
+                <input type="color" placeholder="border color" id="borderColor" name="borderColor" value="#000000">
+            </div>
+            <div>
+                <label for="includeDash">
+                    <input type="checkbox" id="includeDash" name="includeDash">
+                    Include dashes (for generating --:-- times)
+                </label>
+            </div>
+            <div>
+                <label for="includeMS">
+                    <input type="checkbox" id="includeMS" name="includeMS">
+                    Also generate milliseconds image
+                </label>
+                <label for="msSize">of size:
+                    <input type="number" placeholder="ms size" id="msSize" name="msSize" size="4" value="16" min="1" max="99999" step="any">
+                </label>
+                <label for="msBorderSize">and border size:
+                    <input type="number" placeholder="ms size" id="msBorderSize" name="msBorderSize" size="4" value="1" min="0" max="99999" step="any">
+                </label>
+                <label for="msSeparator">
+                    Millisecond separator:
+                    <select id="msSeparator" name="msSeparator">
+                        <option value=".">Period (.)</option>
+                        <option value=":">Colon (:)</option>
+                        <option value="">None</option>
+                    </select>
+                </label>
+            </div>
+            <div>
+                <button>Generate</button>
+            </div>
+            <div class="digits">
+                <h3>Digits Image</h3>
+                <canvas id="digits-canvas"></canvas>
+            </div>
+            <div class="ms-digits">
+                <h3>Milliseconds Digits Image</h3>
+                <canvas id="ms-digits-canvas"></canvas>
+            </div>
+            <div class="sample">
+                <h3>Sample</h3>
+                <canvas id="sample-canvas"></canvas>
+            </div>
+            <div class="code" id="code">
+                # Example code will go here
+            </div>
+    </div>
 
     <h2><code>Timer</code></h2>
 
