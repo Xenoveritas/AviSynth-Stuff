@@ -34,6 +34,59 @@
 --></style>
 <script type="text/javascript"><!--
 
+/**
+ * Returns the lowest y coordinate that has nothing set within the image.
+ */
+function findBottom(ctx) {
+    var w = ctx.canvas.width, h = ctx.canvas.height,
+        data = ctx.getImageData(0, 0, w, h), x, y;
+    for (y = h-1; y > 0; y--) {
+        for (x = 0; x < w; x++) {
+            // We only care if the alpha channel is set
+            if (data.data[(x+y*w)*4+3] != 0) {
+                // Something was set on this row, so return y+1
+                return y+1;
+            }
+        }
+    }
+    return y;
+}
+
+/**
+ * Creates a single font string out of a font and size paramter.
+ */
+function generateFont(font, size) {
+    var m = /^\s*(".+")\s*$/.exec(font);
+    if (m) {
+        // If the user included the quotes for us, use as-is
+        return size + "px " + m[1];
+    }
+    if (/\s/.test(font)) {
+        // If there's whitespace, surround with quotes
+        return size + 'px "' + font.replace('"', '\\"') + '"';
+    } else {
+        return size + "px " + font;
+    }
+}
+
+function findBaseline(font, size) {
+    // Wouldn't it be cool if we could just get the baseline of a font from the
+    // canvas? Like, then it would be possible to render text in a sane way!
+    // Sadly, HTML5 does not provide that feature, instead limiting us to
+    // measuring the width of a given string. And nothing else.
+    // So... instead, finds the baseline by generating an offscreen canvas,
+    // writing an M to it, and measureing where that ended up.
+    var canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    var ctx = canvas.getContext('2d');
+    ctx.font = generateFont(font, size);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('M', 0, 0);
+    return findBottom(ctx);
+}
+
 function DigitGenerator(parent) {
     parent.style.display = 'block';
     this.canvas = document.getElementById('digits-canvas');
@@ -112,7 +165,7 @@ DigitGenerator.prototype = {
         var includeDash = this.includeDash.checked;
         if (includeDash)
             digits += '-';
-        var colonWidth = this._renderDigits(':', this.canvas, this.ctx, font, size, color, borderSize, borderColor, digits);
+        var colonWidth = this._renderDigits(':', this.canvas, this.ctx, font, size, color, borderSize, borderColor, digits, 0);
         var includeMS = this.includeMS.checked, msColonWidth;
         if (includeMS) {
             this.millisDiv.style.display = 'block';
@@ -121,7 +174,14 @@ DigitGenerator.prototype = {
             if (isNaN(msSize)) {
                 alert("Please use a proper number for the millisecond size.");
             } else {
-                msColonWidth = this._renderDigits(this.millisSeparator.value, this.millisCanvas, this.millisCtx, font, msSize, color, msBorderSize, borderColor, digits);
+                // We only need to compare baselines when dealing with
+                // milliseconds, so let's do that.
+                var baseline = findBaseline(font, size),
+                    msBaseline = findBaseline(font, msSize);
+                // Pad the bottom image by the difference so hopefully
+                // everything will line up nicely.
+                var yPad = (size - baseline) - (msSize - msBaseline);
+                msColonWidth = this._renderDigits(this.millisSeparator.value, this.millisCanvas, this.millisCtx, font, msSize, color, msBorderSize, borderColor, digits, yPad);
             }
         } else {
             this.millisDiv.style.display = 'none';
@@ -149,22 +209,9 @@ DigitGenerator.prototype = {
         code.push(')');
         this.code.innerHTML = code.join('');
     },
-    _generateFont: function(font, size) {
-        var m = /^\s*(".+")\s*$/.exec(font);
-        if (m) {
-            // If the user included the quotes for us, use as-is
-            return size + "px " + m[1];
-        }
-        if (/\s/.test(font)) {
-            // If there's whitespace, surround with quotes
-            return size + 'px "' + font.replace('"', '\\"') + '"';
-        } else {
-            return size + "px " + font;
-        }
-    },
-    _renderDigits: function(colon, canvas, ctx, font, size, color, borderSize, borderColor, digits) {
+    _renderDigits: function(colon, canvas, ctx, font, size, color, borderSize, borderColor, digits, yPad) {
         // Add the size to the font
-        font = this._generateFont(font, size);
+        font = generateFont(font, size);
         ctx.font = font;
         var maxWidth = 0;
         // Find the widest digit
@@ -185,7 +232,7 @@ DigitGenerator.prototype = {
                 colonWidth += borderSize * 2;
             }
         }
-        canvas.height = size + borderSize * 2;
+        canvas.height = size + borderSize * 2 + yPad;
         canvas.width = maxWidth * digits.length + colonWidth;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         // Apparently reseting the size resets the context.
@@ -196,10 +243,11 @@ DigitGenerator.prototype = {
             ctx.lineWidth = borderSize * 2;
         }
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+        ctx.textBaseline = 'alphabetic';
         // We want the digits to all be drawn such that they're in the same boxes
         var xOffset = (maxWidth - 1) / 2;
-        var y = canvas.height / 2;
+        // Obnoxiously we can't get the baseline through sane means
+        var y = findBaseline(font, size) + borderSize;
         for (var i = 0; i < digits.length; i++) {
             if (this._debug) {
                 ctx.fillStyle = this._debugColors[i];
