@@ -8,10 +8,15 @@ Import("Easings.avsi")
 
 #: .. function:: DissolveEasing(first, second, frames, easing)
 #:
-#:   Identical to Dissolve (mostly) except uses the given easing function.
-#:   Unlike the rest of panning transitions, this clamps the easing function to
-#:   the 0..1 range. (Values less than 0 are treated as 0, greater than 1 are
-#:   treated as 1.)
+#:    :param clip first: the first clip (plays before the transition)
+#:    :param clip second: the second clip (plays after the transition)
+#:    :param int frames: the number of frames which the transition takes place over
+#:    :param string easing: the easing function to use to do the transition
+#:
+#:    Identical to Dissolve (mostly) except uses the given easing function.
+#:    Unlike the rest of panning transitions, this clamps the easing function to
+#:    the 0..1 range. (Values less than 0 are treated as 0, greater than 1 are
+#:    treated as 1.)
 function DissolveEasing(clip first, clip second, int frames, string easing) {
 	return CreateMovingTransition(first, second, BlankClip(first, length=frames), frames, easing, 0, 0, "Dissolve_anim")
 }
@@ -21,38 +26,64 @@ function Dissolve_anim(clip background, clip first, clip second, string easing, 
 	return Layer(background, Layer(first, second, op="add", level=a), op="add")
 }
 
-# Pan from the first clip to the second clip in the given direction.
-# first      the first clip (plays before the transition)
-# second     the second clip (plays after the transition)
-# frames     the number of frames the transition takes place over
-# dx         the x direction (-1 = left, 1 = right, 0 = no movement)
-# dy         the y direction (-1 = up, 1 = down, 0 = no movement)
-# background (optional) a clip behind the first and second clip. Defaults to a
-#            black BlankClip. Only really necessary if you have alpha in the
-#            clips or if you're going for a diagonal, where it will be visible.
-# easing     the easing function to use (see Easings.avsi), defaults to EaseInLinear
+#: .. function:: Pan(first, second, frames, dx, dy, [string easing[, clip background]])
+#:
+#:    :param clip first: the first clip (plays before the transition)
+#:    :param clip second: the second clip (plays after the transition)
+#:    :param int frames: the number of frames which the transition takes place over
+#:    :param int dx: the x direction (-1 = left, 1 = right, 0 = no movement)
+#:    :param int dy: the y direction (-1 = up, 1 = down, 0 = no movement)
+#:    :param clip background: (optional) a clip behind the first and second
+#:      clip. Defaults to a black BlankClip. Only really necessary if you have
+#:      alpha in the clips or if you're going for a diagonal pan (where both dx
+#:      and dy are non-zero), where it will be visible.
+#:    :param string easing: the easing function to use to do the transition,
+#:      defaults to ``EaseInLinear``
+#:
+#:    Pan from the first clip to the second clip in the given direction.
 function Pan(clip first, clip second, int frames, int dx, int dy, string "easing", clip "background") {
+	Assert(!(dx == 0 && dy == 0), "Cowardly refusing to do a pan with no movement")
 	background = Default(background, BlankClip(first, length=frames))
 	easing = Default(easing, "EaseInLinear")
 	return CreateMovingTransition(first, second, background, frames, easing, dx, dy, "Pan_anim")
 }
 
-# Pan starting with the first clip, moving to the second clip, left-to-right
+#: .. function:: PanLeftToRight(first, second, frames, [easing[, clip background]])
+#:
+#:    :func:`Pan` starting with the first clip, moving to the second clip,
+#:    left-to-right. This is simply::
+#:
+#:        Pan(first, second, frames, -1, 0, easing, background)
 function PanLeftToRight(clip first, clip second, int frames, string "easing", clip "background") {
 	return Pan(first, second, frames, -1, 0, easing, background)
 }
 
-# Pan starting with the first clip, moving to the second clip, right-to-left
+#: .. function:: PanRightToLeft(first, second, frames, [easing[, clip background]])
+#:
+#:    :func:`Pan` starting with the first clip, moving to the second clip,
+#:    right-to-left. This is simply::
+#:
+#:        Pan(first, second, frames, 1, 0, easing, background)
 function PanRightToLeft(clip first, clip second, int frames, string "easing", clip "background") {
 	return Pan(first, second, frames, 1, 0, easing, background)
 }
 
-# Pan starting with the first clip, moving to the second clip, top-to-bottom
+#: .. function:: PanTopToBottom(first, second, frames, [easing[, clip background]])
+#:
+#:    :func:`Pan` starting with the first clip, moving to the second clip,
+#:    top-to-bottom. This is simply::
+#:
+#:        Pan(first, second, frames, 0, -1, easing, background)
 function PanTopToBottom(clip first, clip second, int frames, string "easing", clip "background") {
 	return Pan(first, second, frames, 0, -1, easing, background)
 }
 
-# Pan starting with the first clip, moving to the second clip, bottom-to-top
+#: .. function:: PanBottomToTop(first, second, frames, [easing[, clip background]])
+#:
+#:    :func:`Pan` starting with the first clip, moving to the second clip,
+#:    bottom-to-top. This is simply::
+#:
+#:        Pan(first, second, frames, 0, 1, easing, background)
 function PanBottomToTop(clip first, clip second, int frames, string "easing", clip "background") {
 	return Pan(first, second, frames, 0, 1, easing, background)
 }
@@ -68,39 +99,64 @@ function Pan_anim(clip background, clip first, clip second, string easing, int d
 	return r
 }
 
-# Slide the second clip in over the first in the given direction.
-# first      the first clip (plays before the transition)
-# second     the second clip (plays after the transition)
-# frames     the number of frames the transition takes place over
-# dx         the x direction (-1 = move left starting at the right,
-#            1 = move right starting at the left, 0 = no movement)
-# dy         the y direction (-1 = move up starting at the bottom,
-#            1 = move down starting at the top, 0 = no movement)
-# background (optional) a clip behind the first and second clip, only really
-#            necessary if the two clips have alpha
-# easing     the easing function to use (see Easings.avsi), defaults to EaseInLinear
+#: .. function:: SlideIn(first, second, frames, dx, dy, [string easing[, clip background]])
+#:
+#:    :param clip first: the first clip (plays before the transition)
+#:    :param clip second: the second clip (plays after the transition)
+#:    :param int frames: the number of frames which the transition takes place over
+#:    :param int dx: the x direction (-1 = move left starting at the right,
+#:      1 = move right starting at the left, 0 = no movement)
+#:    :param int dy: the y direction the y direction (-1 = move up starting at
+#:      the bottom, 1 = move down starting at the top, 0 = no movement)
+#:    :param clip background: (optional) a clip behind the first and second
+#:      clip. Defaults to a black BlankClip. Only really necessary if you have
+#:      alpha in the clips.
+#:    :param string easing: the easing function to use to do the transition,
+#:      defaults to ``EaseInLinear``
+#:
+#:    Slide the second clip in over the first in the given direction.
 function SlideIn(clip first, clip second, int frames, int dx, int dy, string "easing", clip "background") {
 	background = Default(background, BlankClip(first, length=frames))
 	easing = Default(easing, "EaseInLinear")
 	return CreateMovingTransition(first, second, background, frames, easing, dx, dy, "SlideIn_anim")
 }
 
-# Slides the second clip in from the right, moving left.
+#: .. function:: SlideInLeft(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideIn` the second clip in from the right, moving left. This is
+#:    simply::
+#:
+#:        SlideIn(first, second, frames, -1, 0, easing, background)
 function SlideInLeft(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideIn(first, second, frames, -1, 0, easing, background)
 }
 
-# Slides the second clip in from the left, moving right.
+#: .. function:: SlideInRight(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideIn` the second clip in from the left, moving right. This is
+#:    simply::
+#:
+#:        SlideIn(first, second, frames, 1, 0, easing, background)
 function SlideInRight(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideIn(first, second, frames, 1, 0, easing, background)
 }
 
-# Slides the second clip in from the bottom, moving up.
+#: .. function:: SlideInUp(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideIn` the second clip in from the bottom, moving up. This is
+#:    simply::
+#:
+#:        SlideIn(first, second, frames, 0, -1, easing, background)
 function SlideInUp(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideIn(first, second, frames, 0, -1, easing, background)
 }
 
-# Slides the second clip in from the top, moving down.
+#: .. function:: SlideInDown(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideIn` the second clip in from the top, moving down. This is
+#:    simply::
+#:
+#:        SlideIn(first, second, frames, 0, 1, easing, background)
 function SlideInDown(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideIn(first, second, frames, 0, 1, easing, background)
 }
@@ -114,39 +170,65 @@ function SlideIn_anim(clip background, clip first, clip second, string easing, i
 	return Layer(first, second, "add", x=(sx+x), y=(sy+y))
 }
 
-# Slide the first clip out over the second in the given direction.
-# first      the first clip (plays before the transition)
-# second     the second clip (plays after the transition)
-# frames     the number of frames the transition takes place over
-# dx         the x direction (-1 = move left starting at the right,
-#            1 = move right starting at the left, 0 = no movement)
-# dy         the y direction (-1 = move up starting at the bottom,
-#            1 = move down starting at the top, 0 = no movement)
-# background (optional) a clip behind the first and second clip, only really
-#            necessary if the two clips have alpha
-# easing     the easing function to use (see Easings.avsi), defaults to EaseInLinear
+#: .. function:: SlideOut(first, second, frames, dx, dy, [string easing[, clip background]])
+#:
+#:    :param clip first: the first clip (plays before the transition)
+#:    :param clip second: the second clip (plays after the transition)
+#:    :param int frames: the number of frames which the transition takes place over
+#:    :param int dx: the x direction (-1 = move left starting at the right,
+#:      1 = move right starting at the left, 0 = no movement)
+#:    :param int dy: the y direction the y direction (-1 = move up starting at
+#:      the bottom, 1 = move down starting at the top, 0 = no movement)
+#:    :param clip background: (optional) a clip behind the first and second
+#:      clip. Defaults to a black BlankClip. Only really necessary if you have
+#:      alpha in the clips.
+#:    :param string easing: the easing function to use to do the transition,
+#:      defaults to ``EaseInLinear``
+#:
+#:    Slide the first clip out over the second in the given direction.
 function SlideOut(clip first, clip second, int frames, int dx, int dy, string "easing", clip "background") {
 	background = Default(background, BlankClip(first, length=frames))
 	easing = Default(easing, "EaseInLinear")
 	return CreateMovingTransition(first, second, background, frames, easing, dx, dy, "SlideOut_anim")
 }
 
-# Slides the first clip out to the left, revealing the second.
+#: .. function:: SlideOutLeft(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideOut` the first clip out to the left, revealing the second.
+#:    This is simply::
+#:
+#:        SlideOut(first, second, frames, -1, 0, easing, background)
 function SlideOutLeft(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideOut(first, second, frames, -1, 0, easing, background)
 }
 
-# Slides the first clip out to the right, revealing the second.
+#: .. function:: SlideOutRight(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideOut` the first clip out to the right, revealing the second.
+#:    This is simply::
+#:
+#:        SlideOut(first, second, frames, 1, 0, easing, background)
 function SlideOutRight(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideOut(first, second, frames, 1, 0, easing, background)
 }
 
-# Slides the first clip up out of the screen, revealing the second.
+#: .. function:: SlideOutUp(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideOut` the first clip up out of the screen, revealing the second.
+#:    This is simply::
+#:
+#:        SlideOut(first, second, frames, 0, -1, easing, background)
 function SlideOutUp(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideOut(first, second, frames, 0, -1, easing, background)
 }
 
-# Slides the first clip down out of the screen, revealing the second.
+
+#: .. function:: SlideOutDown(first, second, frames, [string easing[, clip background]])
+#:
+#:    :func:`SlideOut` the first clip down out of the screen, revealing the second.
+#:    This is simply::
+#:
+#:        SlideOut(first, second, frames, 0, 1, easing, background)
 function SlideOutDown(clip first, clip second, int frames, string "easing", clip "background") {
 	return SlideOut(first, second, frames, 0, 1, easing, background)
 }
@@ -279,18 +361,25 @@ function TrimStart(clip c, int overlap) {
 	return c.Trim(0, overlap)
 }
 
-# Utility function to create a transition that involves moving one clip over
-# another.
-#
-# first      the first clip
-# second     the second clip
-# background a clip behind the two other clips. Only really necessary in cases
-#            where the clips have alpha.
-# frames     the number of frames over which the transition occurs
-# easing     the easing function to use
-# dx         x movement (-1, 0, or 1)
-# dy         y movement (-1, 0, or 1)
-# transition the function Animate should call
+#: .. function:: CreateMovingTransition(first, second, background, frames, easing, dx, dy, transition)
+#:
+#:    :param clip first: the first clip (plays before the transition)
+#:    :param clip second: the second clip (plays after the transition)
+#:    :param clip background: a clip behind the first and second, only really
+#:      necessary in cases where the clips have alpha or the movement reveals a
+#:      blank background.
+#:    :param int frames: the number of frames which the transition takes place over
+#:    :param string easing: the easing function to use to do the transition
+#:    :param int dx: the x direction (-1 = left, 1 = right, 0 = no movement)
+#:    :param int dy: the y direction (-1 = up, 1 = down, 0 = no movement)
+#:      clip. Defaults to a black BlankClip. Only really necessary if you have
+#:      alpha in the clips or if you're going for a diagonal pan (where both dx
+#:      and dy are non-zero), where it will be visible.
+#:    :param string transition: the function ``Animate`` should call
+#:
+#:    Utility function to create a transition that involves moving one clip over
+#:    another. The majority of other transitions in this file use this to do
+#:    the bulk of the work.
 function CreateMovingTransition(clip first, clip second, clip background, int frames, string easing, int dx, int dy, string transition) {
 	TransitionAsserts(first, second, frames)
 	first_trans = first.TrimEnd(frames)

@@ -4,10 +4,10 @@
 #:
 #: .. function:: TASBlend(c, ratio=0.6666, assertEven=False)
 #:
-#:     :param clip c: the clip to blend
-#:     :param float ratio: the ratio of the first frame compared to the second,
+#:    :param clip c: the clip to blend
+#:    :param float ratio: the ratio of the first frame compared to the second,
 #:        defaults to 2/3rds.
-#:     :param bool assertEven: when ``true``, check to make sure there are an
+#:    :param bool assertEven: when ``true``, check to make sure there are an
 #:        even number of frames. This is necessary if you want to make sure that
 #:        you're not potentially desyncing by a single frame if you're combining
 #:        a blended clip with an unblended clip.
