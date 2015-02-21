@@ -13,13 +13,12 @@ Contents:
 
     MastiDS
     Easings
+    Transitions
+    Utilities
     Timer
-    LayerFadeIO
     SNESEffect
     Speed
-    Transitions
     TASBlend
-    Utilities
 
 
 Indices and tables

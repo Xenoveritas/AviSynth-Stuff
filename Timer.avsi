@@ -83,7 +83,7 @@ function Timer(clip video, clip timer, int "x", int "y", \
 #:    - I think), which contains each of the digits starting at 0 and ending at 9,
 #:    and then a colon to use to separate hours/minutes/seconds. The millisecond
 #:    image can be a different size to allow milliseconds to be smaller than the
-#:     main digits.
+#:    main digits.
 #:
 #:    If ``use_dashes`` is ``true`` then both timer images should be 0-9, the dash,
 #:    and finally the colon.

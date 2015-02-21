@@ -46,11 +46,6 @@ how long something takes.
 You could also just use the built-in `ShowTime` AviSynth function, but this can
 be used to make something that looks somewhat nicer.
 
-## LayerFadeIO.avsi
-
-A function for fading another layer on top of a clip. Useful if you want to
-overlay information on top of a base clip for a portion of the clip.
-
 ## SNESEffect.avsi
 
 Provides a pixelation effect, similar to the effect a ton of SNES games use.
