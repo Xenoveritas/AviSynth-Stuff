@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TASBlend.avsi — Method of lowering framerate while maintaining flickering sprites &mdash; AviSynth Stuff 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AviSynth Stuff 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Speed.avsi — Fast forward a clip" href="Speed.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Speed.html" title="Speed.avsi — Fast forward a clip"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tasblend-avsi-method-of-lowering-framerate-while-maintaining-flickering-sprites">
+<h1><code class="docutils literal"><span class="pre">TASBlend.avsi</span></code> &#8212; Method of lowering framerate while maintaining flickering sprites<a class="headerlink" href="#tasblend-avsi-method-of-lowering-framerate-while-maintaining-flickering-sprites" title="Permalink to this headline">¶</a></h1>
+<p>Implementation of the &#8220;TASBlend&#8221; filter, based on the filter described at
+<a class="reference external" href="http://tasvideos.org/EncodingGuide/TASBlend.html">http://tasvideos.org/EncodingGuide/TASBlend.html</a> but with some additional
+comments and features.</p>
+<dl class="function">
+<dt id="TASBlend">
+<code class="descname">TASBlend</code><span class="sig-paren">(</span><em>c</em>, <em>ratio=0.6666</em>, <em>assertEven=False</em><span class="sig-paren">)</span><a class="headerlink" href="#TASBlend" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to blend</li>
+<li><strong>ratio</strong> (<em>float</em>) &#8211; the ratio of the first frame compared to the second,
+defaults to 2/3rds.</li>
+<li><strong>assertEven</strong> (<em>bool</em>) &#8211; when <code class="docutils literal"><span class="pre">true</span></code>, check to make sure there are an
+even number of frames. This is necessary if you want to make sure that
+you&#8217;re not potentially desyncing by a single frame if you&#8217;re combining
+a blended clip with an unblended clip.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The resulting clip will be &#8220;TAS blended&#8221; together and therefore be at exactly
+half the input framerate.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Speed.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">Speed.avsi</span></code> &#8212; Fast forward a clip</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/TASBlend.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Speed.html" title="Speed.avsi — Fast forward a clip"
+             >previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Xenoveritas.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

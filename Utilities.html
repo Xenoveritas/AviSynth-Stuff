@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Utilities.avsi — Various Utility Functions &mdash; AviSynth Stuff 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AviSynth Stuff 1.0 documentation" href="index.html" />
+    <link rel="next" title="Timer.avsi — Overlay a Timer" href="Timer.html" />
+    <link rel="prev" title="Transitions.avsi — Transition between two clips" href="Transitions.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Timer.html" title="Timer.avsi — Overlay a Timer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Transitions.html" title="Transitions.avsi — Transition between two clips"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="utilities-avsi-various-utility-functions">
+<h1><code class="docutils literal"><span class="pre">Utilities.avsi</span></code> &#8212; Various Utility Functions<a class="headerlink" href="#utilities-avsi-various-utility-functions" title="Permalink to this headline">¶</a></h1>
+<p>Miscellaneous utilities that I&#8217;ve found somewhat useful.</p>
+<dl class="function">
+<dt id="AudioToClip">
+<code class="descname">AudioToClip</code><span class="sig-paren">(</span><em>audio</em>, <em>fps=24.0</em><span class="sig-paren">)</span><a class="headerlink" href="#AudioToClip" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>audio</strong> (<em>clip</em>) &#8211; the audio clip to be turned into a clip</li>
+<li><strong>fps</strong> (<em>float</em>) &#8211; the FPS of the returned clip (defaults to 24)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>AudioDub an audio clip on a BlankClip to allow it to be trimmed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="VideoLengthToAudioLength">
+<code class="descname">VideoLengthToAudioLength</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#VideoLengthToAudioLength" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>c</strong> (<em>clip</em>) &#8211; the clip to match audio and video lengths</td>
+</tr>
+</tbody>
+</table>
+<p>Adds/removes frames from the video to match the audio length (via <code class="docutils literal"><span class="pre">ChangeFPS</span></code>).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Cut">
+<code class="descname">Cut</code><span class="sig-paren">(</span><em>c</em>, <em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#Cut" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to cut</li>
+<li><strong>start</strong> (<em>int</em>) &#8211; the first frame (inclusive) to be removed</li>
+<li><strong>end</strong> (<em>int</em>) &#8211; the last frame (exclusive) to be removed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Cut out a region of frames.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DissolveCut">
+<code class="descname">DissolveCut</code><span class="sig-paren">(</span><em>c</em>, <em>start</em>, <em>end</em><span class="optional">[</span>, <em>overlap</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DissolveCut" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to cut</li>
+<li><strong>start</strong> (<em>int</em>) &#8211; the first frame (inclusive) to be removed</li>
+<li><strong>end</strong> (<em>int</em>) &#8211; the last frame (exclusive) to be removed</li>
+<li><strong>overlap</strong> (<em>int</em>) &#8211; if given, the number of frames to fade during.
+Defaults to 1 second by rounding the frame rate to the nearest whole
+number.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Cut out a region, dissolving between the region cut out.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="LayerFadeIO">
+<code class="descname">LayerFadeIO</code><span class="sig-paren">(</span><em>back</em>, <em>over</em>, <em>start</em>, <em>end</em>, <em>start_time</em>, <span class="optional">[</span><em>end_time</em>, <span class="optional">]</span><em>x=0</em>, <em>y=0</em>, <em>easing=&quot;linear&quot;</em><span class="optional">[</span>, <em>end_easing</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#LayerFadeIO" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>back</strong> (<em>clip</em>) &#8211; the clip to fade on top of</li>
+<li><strong>over</strong> (<em>clip</em>) &#8211; the clip being faded on top of back</li>
+<li><strong>start</strong> (<em>int</em>) &#8211; the frame to start fading in on</li>
+<li><strong>end</strong> (<em>int</em>) &#8211; the frame to have finished fading out on</li>
+<li><strong>start_time</strong> (<em>int</em>) &#8211; the number of frames to fade in over</li>
+<li><strong>end_time</strong> (<em>int</em>) &#8211; the number of frames to fade out, defaults to start_time</li>
+<li><strong>x, y</strong> (<em>int</em>) &#8211; coordinates to place the upper layer on; defaults to 0,0</li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use; defaults to <code class="docutils literal"><span class="pre">EaseInLinear</span></code></li>
+<li><strong>end_easing</strong> (<em>string</em>) &#8211; the end easing function to use; defaults to the value of <code class="docutils literal"><span class="pre">end_easing</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Fade a layer on top of another layer. The fade animation starts at the
+&#8220;start&#8221; frame (the first frame where the overlaid clip will be at all
+visible), and ends at &#8220;end&#8221; frame (the last frame where the overlaid clip
+will be at all visible). The clip will be fully opaque &#8220;start_time&#8221; frames
+after &#8220;start&#8221; (so if start is 30 and start_time is 15, the first fully
+opaque frame will be 45).</p>
+<p>Note that in order to use the Easing functions, you must include the
+<code class="docutils literal"><span class="pre">Easings.avsi</span></code> file.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Transitions.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">Transitions.avsi</span></code> &#8212; Transition between two clips</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Timer.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">Timer.avsi</span></code> &#8212; Overlay a Timer</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Utilities.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Timer.html" title="Timer.avsi — Overlay a Timer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Transitions.html" title="Transitions.avsi — Transition between two clips"
+             >previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Xenoveritas.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

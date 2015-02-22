@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Timer.avsi — Overlay a Timer &mdash; AviSynth Stuff 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AviSynth Stuff 1.0 documentation" href="index.html" />
+    <link rel="next" title="SNESEffect.avsi — Pixelated SNES effect" href="SNESEffect.html" />
+    <link rel="prev" title="Utilities.avsi — Various Utility Functions" href="Utilities.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="SNESEffect.html" title="SNESEffect.avsi — Pixelated SNES effect"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Utilities.html" title="Utilities.avsi — Various Utility Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="timer-avsi-overlay-a-timer">
+<h1><code class="docutils literal"><span class="pre">Timer.avsi</span></code> &#8212; Overlay a Timer<a class="headerlink" href="#timer-avsi-overlay-a-timer" title="Permalink to this headline">¶</a></h1>
+<p>Create an overlay on top of an existing clip that is a timer.</p>
+<dl class="function">
+<dt id="Timer">
+<code class="descname">Timer</code><span class="sig-paren">(</span><em>video</em>, <em>timer</em>, <em>x</em>, <em>y</em>, <em>start_frame</em>, <em>end_frame</em>, <em>colon_width</em>, <em>use_dashes</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#Timer" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>video</strong> (<em>clip</em>) &#8211; the video to overlay the timer on top of</li>
+<li><strong>timer</strong> (<em>clip</em>) &#8211; a clip to use for the timer digits</li>
+<li><strong>x, y</strong> (<em>int</em>) &#8211; the x, y coordinates (defaults to 0, 0)</li>
+<li><strong>start_frame</strong> (<em>int</em>) &#8211; the first frame to display the timer on (defaults
+to 0)</li>
+<li><strong>end_frame</strong> (<em>int</em>) &#8211; the last frame to end the timer on (defaults to the
+<code class="docutils literal"><span class="pre">video</span></code>&#8216;s <code class="docutils literal"><span class="pre">FrameCount</span></code>)</li>
+<li><strong>colon_width</strong> (<em>int</em>) &#8211; the width of the colon glyph, otherwise assumed
+to be the same as the digits</li>
+<li><strong>use_dashes</strong> (<em>bool</em>) &#8211; indicates that the timer contains 12 glyphs, the
+12th is a dash to use before the timer starts. The dash is always the
+width of a digit as it replaces the digits. (Defaults to <code class="docutils literal"><span class="pre">false</span></code>)</li>
+<li><strong>type</strong> (<em>string</em>) &#8211; either <code class="docutils literal"><span class="pre">&quot;MS&quot;</span></code> to only show minutes/seconds or
+<code class="docutils literal"><span class="pre">&quot;HMS&quot;</span></code> to show hours/minutes/seconds. Default is <code class="docutils literal"><span class="pre">&quot;MS&quot;</span></code> if the
+time span from <code class="docutils literal"><span class="pre">start</span></code> to <code class="docutils literal"><span class="pre">end</span></code> is less than an hour, <code class="docutils literal"><span class="pre">&quot;HMS&quot;</span></code> if
+it is an hour or more.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Overlay the given video with a timer, using the given information.</p>
+<p>The timer clip should be an image clip (as only the first frame will be used
+- I think), which contains each of the digits starting at 0 and ending at 9,
+and then a colon to use to separate hours/minutes/seconds.</p>
+<p>If <code class="docutils literal"><span class="pre">use_dashes</span></code> is <code class="docutils literal"><span class="pre">true</span></code> then the timer image should be 0-9, the dash,
+and finally the colon.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="TimerWithMillis">
+<code class="descname">TimerWithMillis</code><span class="sig-paren">(</span><em>video</em>, <em>timer</em>, <em>timer_ms</em>, <em>x</em>, <em>y</em>, <em>start_frame</em>, <em>end_frame</em>, <em>colon_width</em>, <em>colon_width_ms</em>, <em>use_dashes</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#TimerWithMillis" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>video</strong> (<em>clip</em>) &#8211; the video to overlay the timer on top of</li>
+<li><strong>timer</strong> (<em>clip</em>) &#8211; a clip to use for the timer digits</li>
+<li><strong>timer_ms</strong> (<em>clip</em>) &#8211; a clip to use for the timer digits</li>
+<li><strong>x, y</strong> (<em>int</em>) &#8211; the x, y coordinates (defaults to 0, 0)</li>
+<li><strong>start_frame</strong> (<em>int</em>) &#8211; the first frame to display the timer on (defaults
+to 0)</li>
+<li><strong>end_frame</strong> (<em>int</em>) &#8211; the last frame to end the timer on (defaults to the
+<code class="docutils literal"><span class="pre">video</span></code>&#8216;s <code class="docutils literal"><span class="pre">FrameCount</span></code>)</li>
+<li><strong>colon_width</strong> (<em>int</em>) &#8211; the width of the colon glyph, otherwise assumed
+to be the same as the digits</li>
+<li><strong>colon_width_ms</strong> (<em>int</em>) &#8211; the width of the colon glyph for the
+milliseconds digits, otherwise assumed to be the same as the
+millisecond digits</li>
+<li><strong>use_dashes</strong> (<em>bool</em>) &#8211; indicates that the timer contains 12 glyphs, the
+12th is a dash to use before the timer starts. The dash is always the
+width of a digit as it replaces the digits. (Defaults to <code class="docutils literal"><span class="pre">false</span></code>)</li>
+<li><strong>type</strong> (<em>string</em>) &#8211; either <code class="docutils literal"><span class="pre">&quot;MS&quot;</span></code> to only show minutes/seconds or
+<code class="docutils literal"><span class="pre">&quot;HMS&quot;</span></code> to show hours/minutes/seconds. Default is <code class="docutils literal"><span class="pre">&quot;MS&quot;</span></code> if the
+time span from <code class="docutils literal"><span class="pre">start</span></code> to <code class="docutils literal"><span class="pre">end</span></code> is less than an hour, <code class="docutils literal"><span class="pre">&quot;HMS&quot;</span></code> if
+it is an hour or more.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Overlay the given video with a timer, using the given information.</p>
+<p>The timer clip should be an image clip (as only the first frame will be used
+- I think), which contains each of the digits starting at 0 and ending at 9,
+and then a colon to use to separate hours/minutes/seconds. The millisecond
+image can be a different size to allow milliseconds to be smaller than the
+main digits.</p>
+<p>If <code class="docutils literal"><span class="pre">use_dashes</span></code> is <code class="docutils literal"><span class="pre">true</span></code> then both timer images should be 0-9, the dash,
+and finally the colon.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Utilities.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">Utilities.avsi</span></code> &#8212; Various Utility Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="SNESEffect.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">SNESEffect.avsi</span></code> &#8212; Pixelated SNES effect</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Timer.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="SNESEffect.html" title="SNESEffect.avsi — Pixelated SNES effect"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Utilities.html" title="Utilities.avsi — Various Utility Functions"
+             >previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Xenoveritas.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

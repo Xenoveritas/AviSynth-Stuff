@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Transitions.avsi — Transition between two clips &mdash; AviSynth Stuff 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AviSynth Stuff 1.0 documentation" href="index.html" />
+    <link rel="next" title="Utilities.avsi — Various Utility Functions" href="Utilities.html" />
+    <link rel="prev" title="Easings.avsi — AviSynth version of Easings" href="Easings.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Utilities.html" title="Utilities.avsi — Various Utility Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Easings.html" title="Easings.avsi — AviSynth version of Easings"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="transitions-avsi-transition-between-two-clips">
+<h1><code class="docutils literal"><span class="pre">Transitions.avsi</span></code> &#8212; Transition between two clips<a class="headerlink" href="#transitions-avsi-transition-between-two-clips" title="Permalink to this headline">¶</a></h1>
+<p>This contains several common transitions to move between clips.</p>
+<p>These transitions accept an &#8220;easing&#8221; function which determines how the
+transition applies. See Easings.avsi for the complete list of easings.</p>
+<dl class="function">
+<dt id="DissolveEasing">
+<code class="descname">DissolveEasing</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em>, <em>easing</em><span class="sig-paren">)</span><a class="headerlink" href="#DissolveEasing" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>first</strong> (<em>clip</em>) &#8211; the first clip (plays before the transition)</li>
+<li><strong>second</strong> (<em>clip</em>) &#8211; the second clip (plays after the transition)</li>
+<li><strong>frames</strong> (<em>int</em>) &#8211; the number of frames which the transition takes place over</li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use to do the transition</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Identical to Dissolve (mostly) except uses the given easing function.
+Unlike the rest of panning transitions, this clamps the easing function to
+the 0..1 range. (Values less than 0 are treated as 0, greater than 1 are
+treated as 1.)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Pan">
+<code class="descname">Pan</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em>, <em>dx</em>, <em>dy</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Pan" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>first</strong> (<em>clip</em>) &#8211; the first clip (plays before the transition)</li>
+<li><strong>second</strong> (<em>clip</em>) &#8211; the second clip (plays after the transition)</li>
+<li><strong>frames</strong> (<em>int</em>) &#8211; the number of frames which the transition takes place over</li>
+<li><strong>dx</strong> (<em>int</em>) &#8211; the x direction (-1 = left, 1 = right, 0 = no movement)</li>
+<li><strong>dy</strong> (<em>int</em>) &#8211; the y direction (-1 = up, 1 = down, 0 = no movement)</li>
+<li><strong>background</strong> (<em>clip</em>) &#8211; (optional) a clip behind the first and second
+clip. Defaults to a black BlankClip. Only really necessary if you have
+alpha in the clips or if you&#8217;re going for a diagonal pan (where both dx
+and dy are non-zero), where it will be visible.</li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use to do the transition,
+defaults to <code class="docutils literal"><span class="pre">EaseInLinear</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Pan from the first clip to the second clip in the given direction.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="PanLeftToRight">
+<code class="descname">PanLeftToRight</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PanLeftToRight" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#Pan" title="Pan"><code class="xref py py-func docutils literal"><span class="pre">Pan()</span></code></a> starting with the first clip, moving to the second clip,
+left-to-right. This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Pan</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="PanRightToLeft">
+<code class="descname">PanRightToLeft</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PanRightToLeft" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#Pan" title="Pan"><code class="xref py py-func docutils literal"><span class="pre">Pan()</span></code></a> starting with the first clip, moving to the second clip,
+right-to-left. This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Pan</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="PanTopToBottom">
+<code class="descname">PanTopToBottom</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PanTopToBottom" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#Pan" title="Pan"><code class="xref py py-func docutils literal"><span class="pre">Pan()</span></code></a> starting with the first clip, moving to the second clip,
+top-to-bottom. This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Pan</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="PanBottomToTop">
+<code class="descname">PanBottomToTop</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PanBottomToTop" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#Pan" title="Pan"><code class="xref py py-func docutils literal"><span class="pre">Pan()</span></code></a> starting with the first clip, moving to the second clip,
+bottom-to-top. This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Pan</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideIn">
+<code class="descname">SlideIn</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em>, <em>dx</em>, <em>dy</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideIn" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>first</strong> (<em>clip</em>) &#8211; the first clip (plays before the transition)</li>
+<li><strong>second</strong> (<em>clip</em>) &#8211; the second clip (plays after the transition)</li>
+<li><strong>frames</strong> (<em>int</em>) &#8211; the number of frames which the transition takes place over</li>
+<li><strong>dx</strong> (<em>int</em>) &#8211; the x direction (-1 = move left starting at the right,
+1 = move right starting at the left, 0 = no movement)</li>
+<li><strong>dy</strong> (<em>int</em>) &#8211; the y direction the y direction (-1 = move up starting at
+the bottom, 1 = move down starting at the top, 0 = no movement)</li>
+<li><strong>background</strong> (<em>clip</em>) &#8211; (optional) a clip behind the first and second
+clip. Defaults to a black BlankClip. Only really necessary if you have
+alpha in the clips.</li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use to do the transition,
+defaults to <code class="docutils literal"><span class="pre">EaseInLinear</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Slide the second clip in over the first in the given direction.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideInLeft">
+<code class="descname">SlideInLeft</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideInLeft" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideIn" title="SlideIn"><code class="xref py py-func docutils literal"><span class="pre">SlideIn()</span></code></a> the second clip in from the right, moving left. This is
+simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideIn</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideInRight">
+<code class="descname">SlideInRight</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideInRight" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideIn" title="SlideIn"><code class="xref py py-func docutils literal"><span class="pre">SlideIn()</span></code></a> the second clip in from the left, moving right. This is
+simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideIn</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideInUp">
+<code class="descname">SlideInUp</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideInUp" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideIn" title="SlideIn"><code class="xref py py-func docutils literal"><span class="pre">SlideIn()</span></code></a> the second clip in from the bottom, moving up. This is
+simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideIn</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideInDown">
+<code class="descname">SlideInDown</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideInDown" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideIn" title="SlideIn"><code class="xref py py-func docutils literal"><span class="pre">SlideIn()</span></code></a> the second clip in from the top, moving down. This is
+simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideIn</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideOut">
+<code class="descname">SlideOut</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em>, <em>dx</em>, <em>dy</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideOut" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>first</strong> (<em>clip</em>) &#8211; the first clip (plays before the transition)</li>
+<li><strong>second</strong> (<em>clip</em>) &#8211; the second clip (plays after the transition)</li>
+<li><strong>frames</strong> (<em>int</em>) &#8211; the number of frames which the transition takes place over</li>
+<li><strong>dx</strong> (<em>int</em>) &#8211; the x direction (-1 = move left starting at the right,
+1 = move right starting at the left, 0 = no movement)</li>
+<li><strong>dy</strong> (<em>int</em>) &#8211; the y direction the y direction (-1 = move up starting at
+the bottom, 1 = move down starting at the top, 0 = no movement)</li>
+<li><strong>background</strong> (<em>clip</em>) &#8211; (optional) a clip behind the first and second
+clip. Defaults to a black BlankClip. Only really necessary if you have
+alpha in the clips.</li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use to do the transition,
+defaults to <code class="docutils literal"><span class="pre">EaseInLinear</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Slide the first clip out over the second in the given direction.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideOutLeft">
+<code class="descname">SlideOutLeft</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideOutLeft" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideOut" title="SlideOut"><code class="xref py py-func docutils literal"><span class="pre">SlideOut()</span></code></a> the first clip out to the left, revealing the second.
+This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideOut</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideOutRight">
+<code class="descname">SlideOutRight</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideOutRight" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideOut" title="SlideOut"><code class="xref py py-func docutils literal"><span class="pre">SlideOut()</span></code></a> the first clip out to the right, revealing the second.
+This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideOut</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideOutUp">
+<code class="descname">SlideOutUp</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideOutUp" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideOut" title="SlideOut"><code class="xref py py-func docutils literal"><span class="pre">SlideOut()</span></code></a> the first clip up out of the screen, revealing the second.
+This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideOut</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlideOutDown">
+<code class="descname">SlideOutDown</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>frames</em><span class="optional">[</span>, <em>string easing</em><span class="optional">[</span>, <em>clip background</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SlideOutDown" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#SlideOut" title="SlideOut"><code class="xref py py-func docutils literal"><span class="pre">SlideOut()</span></code></a> the first clip down out of the screen, revealing the second.
+This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">SlideOut</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">easing</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="CreateMovingTransition">
+<code class="descname">CreateMovingTransition</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>background</em>, <em>frames</em>, <em>easing</em>, <em>dx</em>, <em>dy</em>, <em>transition</em><span class="sig-paren">)</span><a class="headerlink" href="#CreateMovingTransition" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>first</strong> (<em>clip</em>) &#8211; the first clip (plays before the transition)</li>
+<li><strong>second</strong> (<em>clip</em>) &#8211; the second clip (plays after the transition)</li>
+<li><strong>background</strong> (<em>clip</em>) &#8211; a clip behind the first and second, only really
+necessary in cases where the clips have alpha or the movement reveals a
+blank background.</li>
+<li><strong>frames</strong> (<em>int</em>) &#8211; the number of frames which the transition takes place over</li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use to do the transition</li>
+<li><strong>dx</strong> (<em>int</em>) &#8211; the x direction (-1 = left, 1 = right, 0 = no movement)</li>
+<li><strong>dy</strong> (<em>int</em>) &#8211; the y direction (-1 = up, 1 = down, 0 = no movement)
+clip. Defaults to a black BlankClip. Only really necessary if you have
+alpha in the clips or if you&#8217;re going for a diagonal pan (where both dx
+and dy are non-zero), where it will be visible.</li>
+<li><strong>transition</strong> (<em>string</em>) &#8211; the function <code class="docutils literal"><span class="pre">Animate</span></code> should call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Utility function to create a transition that involves moving one clip over
+another. The majority of other transitions in this file use this to do
+the bulk of the work.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Easings.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">Easings.avsi</span></code> &#8212; AviSynth version of Easings</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Utilities.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">Utilities.avsi</span></code> &#8212; Various Utility Functions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Transitions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Utilities.html" title="Utilities.avsi — Various Utility Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Easings.html" title="Easings.avsi — AviSynth version of Easings"
+             >previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Xenoveritas.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>
