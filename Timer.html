@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <title>Timer</title>
 <style type="text/css"><!--
+    /* Steal typography from bootstrap */
+    html {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+    }
+    code, div.code {
+        font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
     div.digits, div.ms-digits {
         padding: 16px;
     }
@@ -21,7 +30,6 @@
         padding: 0 0 8px 0;
     }
     div.code {
-        font-family: monospace;
         margin: 8px;
         padding: 16px;
         border: solid 1px #333;
@@ -87,6 +95,34 @@ function findBaseline(font, size) {
     return findBottom(ctx);
 }
 
+/**
+ * Run a bilinear scale over a set of pixels.
+ * This is a very simplistic algorithm and requires src to be exactly size times
+ * bigger than dest.
+ */
+function bilinearScale(src, dest, size) {
+    var w = dest.canvas.width, h = dest.canvas.height,
+        sW = src.canvas.width, sH = src.canvas.height,
+        srcData = src.getImageData(0, 0, sW, sH),
+        destData = dest.createImageData(w, h),
+        subpixels = size*size,
+        x, y, c, v, sx, sy, offset;
+    for (y = 0; y < h; y++) {
+        for (x = 0; x < w; x++) {
+            for (c = 0; c < 4; c++) {
+                v = 0;
+                for (sy = 0; sy < size; sy++) {
+                    for (sx = 0; sx < size; sx++) {
+                        v += srcData.data[((y*size+sy)*sW + (x*size+sx))*4 + c];
+                    }
+                }
+                destData.data[(y*w + x)*4 + c] = Math.round(v / subpixels);
+            }
+        }
+    }
+    dest.putImageData(destData, 0, 0);
+}
+
 function DigitGenerator(parent) {
     parent.style.display = 'block';
     this.canvas = document.getElementById('digits-canvas');
@@ -105,6 +141,8 @@ function DigitGenerator(parent) {
     this.millisFontSize = document.getElementById('msSize');;
     this.millisBorderSize = document.getElementById('msBorderSize');
     this.millisSeparator = document.getElementById("msSeparator");
+    this.oversize = document.getElementById('oversize');
+    this.oversizeJSBilinear = document.getElementById('oversizeJSBilinear');
     document.getElementById('digit-generator-form').onsubmit = (function(me) {
         return function() {
             try {
@@ -160,12 +198,22 @@ DigitGenerator.prototype = {
         var color = this.color.value;
         var borderSize = Number(this.borderSize.value, 10);
         var borderColor = this.borderColor.value;
+        var oversize = Number(this.oversize.value, 10);
+        if (!(oversize > 1)) {
+            oversize = 1;
+        }
+        if (oversize > 32) {
+            oversize = 32;
+        }
+        // Right now oversize must be an integer.
+        oversize = Math.round(oversize);
+        this._jsScale = this.oversizeJSBilinear.checked;
         var digits = '0123456789';
         var colon = ':';
         var includeDash = this.includeDash.checked;
         if (includeDash)
             digits += '-';
-        var colonWidth = this._renderDigits(':', this.canvas, this.ctx, font, size, color, borderSize, borderColor, digits, 0);
+        var colonWidth = this._renderDigits(':', this.canvas, this.ctx, font, size, color, borderSize, borderColor, digits, 0, oversize);
         var includeMS = this.includeMS.checked, msColonWidth;
         if (includeMS) {
             this.millisDiv.style.display = 'block';
@@ -181,7 +229,7 @@ DigitGenerator.prototype = {
                 // Pad the bottom image by the difference so hopefully
                 // everything will line up nicely.
                 var yPad = (size - baseline) - (msSize - msBaseline);
-                msColonWidth = this._renderDigits(this.millisSeparator.value, this.millisCanvas, this.millisCtx, font, msSize, color, msBorderSize, borderColor, digits, yPad);
+                msColonWidth = this._renderDigits(this.millisSeparator.value, this.millisCanvas, this.millisCtx, font, msSize, color, msBorderSize, borderColor, digits, yPad, oversize);
             }
         } else {
             this.millisDiv.style.display = 'none';
@@ -209,7 +257,16 @@ DigitGenerator.prototype = {
         code.push(')');
         this.code.innerHTML = code.join('');
     },
-    _renderDigits: function(colon, canvas, ctx, font, size, color, borderSize, borderColor, digits, yPad) {
+    _renderDigits: function(colon, canvas, ctx, font, size, color, borderSize, borderColor, digits, yPad, oversize) {
+        // If we're oversizing, we need to multiply the size by the oversize
+        size *= oversize;
+        borderSize *= oversize;
+        var originalCanvas = canvas, originalCtx = ctx;
+        if (oversize > 1) {
+            // If we are oversizing, generate an offscreen canvas to use
+            canvas = document.createElement('canvas');
+            ctx = canvas.getContext('2d');
+        }
         // Add the size to the font
         font = generateFont(font, size);
         ctx.font = font;
@@ -219,7 +276,7 @@ DigitGenerator.prototype = {
             maxWidth = Math.max(ctx.measureText(digits[i]).width, maxWidth);
         }
         // Round maxWidth up to the nearest integer
-        maxWidth = Math.ceil(maxWidth);
+        maxWidth = Math.ceil(maxWidth / oversize) * oversize;
         // If we have a border, we need to include it too
         if (borderSize > 0) {
             maxWidth += borderSize * 2;
@@ -227,7 +284,7 @@ DigitGenerator.prototype = {
         var colonWidth = 0;
         if (colon.length > 0) {
             // Also need to add the colon
-            colonWidth = Math.ceil(ctx.measureText(colon).width)
+            colonWidth = Math.ceil(ctx.measureText(colon).width / oversize) * oversize;
             if (borderSize > 0) {
                 colonWidth += borderSize * 2;
             }
@@ -241,6 +298,8 @@ DigitGenerator.prototype = {
         if (borderSize > 0) {
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = borderSize * 2;
+            ctx.lineJoin = 'miter';
+            ctx.miterLimit = 2;
         }
         ctx.textAlign = 'center';
         ctx.textBaseline = 'alphabetic';
@@ -265,7 +324,19 @@ DigitGenerator.prototype = {
             }
             ctx.fillText(colon, maxWidth * digits.length + colonWidth / 2, y);
         }
-        return colonWidth;
+        // If we were oversizing, now we copy and scale down the original
+        // image to the original canvas.
+        if (oversize > 1) {
+            originalCanvas.width = canvas.width / oversize;
+            originalCanvas.height = canvas.height / oversize;
+            if (this._jsScale) {
+                bilinearScale(ctx, originalCtx, oversize);
+            } else {
+                originalCtx.clearRect(0, 0, originalCanvas.width, originalCanvas.height);
+                originalCtx.drawImage(canvas, 0, 0, originalCanvas.width, originalCanvas.height);
+            }
+        }
+        return colonWidth / oversize;
     },
     /**
      * Renders a digit as Timer might
@@ -371,6 +442,24 @@ DigitGenerator.prototype = {
                         <option value="">None</option>
                     </select>
                 </label>
+            </div>
+            <div>
+                <label for="oversize">
+                    Oversize the image by:
+                    <input type="number" placeholder="oversize" id="oversize" name="oversize" size="4" value="4">
+                </label>
+                <p>(This is an attempt to deal with the somewhat horrible
+                    hinting that many browsers use. It will scale up everything
+                    by the number given and then scale down in order to
+                    hopefully improve the over-all image quality.)</p>
+            </div>
+            <div>
+                <label for="oversizeJSBilinear">
+                    <input type="checkbox" checked="checked" id="oversizeJSBilinear" name="oversizeJSBilinear">
+                    Use JavaScript bilinear scale instead of browser's built-in method.
+                </label>
+                <p>This should be slower than your browser's method but may
+                    produce better results.</p>
             </div>
             <div>
                 <button>Generate</button>
