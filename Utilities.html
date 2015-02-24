@@ -140,19 +140,48 @@ number.</li>
 <li><strong>start_time</strong> (<em>int</em>) &#8211; the number of frames to fade in over</li>
 <li><strong>end_time</strong> (<em>int</em>) &#8211; the number of frames to fade out, defaults to start_time</li>
 <li><strong>x, y</strong> (<em>int</em>) &#8211; coordinates to place the upper layer on; defaults to 0,0</li>
-<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use; defaults to <code class="docutils literal"><span class="pre">EaseInLinear</span></code></li>
-<li><strong>end_easing</strong> (<em>string</em>) &#8211; the end easing function to use; defaults to the value of <code class="docutils literal"><span class="pre">end_easing</span></code></li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use; defaults to
+<code class="docutils literal"><span class="pre">EaseInLinear</span></code></li>
+<li><strong>end_easing</strong> (<em>string</em>) &#8211; the end easing function to use; defaults to the
+same as <code class="docutils literal"><span class="pre">easing</span></code></li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
 <p>Fade a layer on top of another layer. The fade animation starts at the
-&#8220;start&#8221; frame (the first frame where the overlaid clip will be at all
-visible), and ends at &#8220;end&#8221; frame (the last frame where the overlaid clip
-will be at all visible). The clip will be fully opaque &#8220;start_time&#8221; frames
-after &#8220;start&#8221; (so if start is 30 and start_time is 15, the first fully
-opaque frame will be 45).</p>
+<code class="docutils literal"><span class="pre">start</span></code> frame (the first frame where the overlaid clip will be at all
+visible), and ends at <code class="docutils literal"><span class="pre">end</span></code> frame (the last frame where the overlaid
+clip will be at all visible). The clip will be fully opaque <code class="docutils literal"><span class="pre">start_time</span></code>
+frames after <code class="docutils literal"><span class="pre">start</span></code> (so if <code class="docutils literal"><span class="pre">start</span></code> is 30 and <code class="docutils literal"><span class="pre">start_time</span></code> is 15,
+the first fully opaque frame will be 45).</p>
+<p>Note that in order to use the Easing functions, you must include the
+<code class="docutils literal"><span class="pre">Easings.avsi</span></code> file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="LayerFadeIn">
+<code class="descname">LayerFadeIn</code><span class="sig-paren">(</span><em>back</em>, <em>over</em>, <em>start</em>, <em>end</em>, <em>start_time</em>, <span class="optional">[</span><em>end_time</em>, <span class="optional">]</span><em>x=0</em>, <em>y=0</em>, <em>easing=&quot;linear&quot;</em><span class="optional">[</span>, <em>end_easing</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#LayerFadeIn" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>back</strong> (<em>clip</em>) &#8211; the clip to fade on top of</li>
+<li><strong>over</strong> (<em>clip</em>) &#8211; the clip being faded on top of back</li>
+<li><strong>start</strong> (<em>int</em>) &#8211; the frame to start fading in on</li>
+<li><strong>fade_duration</strong> (<em>int</em>) &#8211; the number of frames to fade in over</li>
+<li><strong>x, y</strong> (<em>int</em>) &#8211; coordinates to place the upper layer on; defaults to 0,0</li>
+<li><strong>easing</strong> (<em>string</em>) &#8211; the easing function to use; defaults to <code class="docutils literal"><span class="pre">EaseInLinear</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Fade in a layer on top of another layer. The fade in animation starts at
+the <code class="docutils literal"><span class="pre">start</span></code> frame (the first frame where the overlaid clip will be at
+all visible) and lasts for <code class="docutils literal"><span class="pre">fade_duration</span></code> frames. Once the layer had
+been faded in, it will remain for the remainder of the video.</p>
 <p>Note that in order to use the Easing functions, you must include the
 <code class="docutils literal"><span class="pre">Easings.avsi</span></code> file.</p>
 </dd></dl>
