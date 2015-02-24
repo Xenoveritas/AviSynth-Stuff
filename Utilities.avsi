@@ -70,15 +70,17 @@ function DissolveCut(clip c, int start, int end, int "overlap") {
 #:    :param int start_time: the number of frames to fade in over
 #:    :param int end_time: the number of frames to fade out, defaults to start_time
 #:    :param int x, y: coordinates to place the upper layer on; defaults to 0,0
-#:    :param string easing: the easing function to use; defaults to ``EaseInLinear``
-#:    :param string end_easing: the end easing function to use; defaults to the value of ``end_easing``
+#:    :param string easing: the easing function to use; defaults to
+#:      ``EaseInLinear``
+#:    :param string end_easing: the end easing function to use; defaults to the
+#:      same as ``easing``
 #:
 #:    Fade a layer on top of another layer. The fade animation starts at the
-#:    "start" frame (the first frame where the overlaid clip will be at all
-#:    visible), and ends at "end" frame (the last frame where the overlaid clip
-#:    will be at all visible). The clip will be fully opaque "start_time" frames
-#:    after "start" (so if start is 30 and start_time is 15, the first fully
-#:    opaque frame will be 45).
+#:    ``start`` frame (the first frame where the overlaid clip will be at all
+#:    visible), and ends at ``end`` frame (the last frame where the overlaid
+#:    clip will be at all visible). The clip will be fully opaque ``start_time``
+#:    frames after ``start`` (so if ``start`` is 30 and ``start_time`` is 15,
+#:    the first fully opaque frame will be 45).
 #:
 #:    Note that in order to use the Easing functions, you must include the
 #:    ``Easings.avsi`` file.
@@ -98,21 +100,67 @@ function LayerFadeIO(clip back, clip over, \
 	Assert(end < back.FrameCount(), "End time (" + String(end) + ") is after clip ends (" + String(back.FrameCount()-1) + ")")
 	Assert(end - start_time > start, "End time does not give enough time for the clip to fade in (earliest start is " + String(end-start_time-end_time-1) + " using current settings)")
 	Assert(end - start_time - end_time > start, "End time does not give enough time for the clip to fade out (earliest start is " + String(end-start_time-end_time-1) + " using current settings)")
-	part_1 = Trim(back, start, start + start_time)
+	# Just the fade in section
+	fade_in = Trim(back, start, start + start_time)
+	# Everything after the fade in
 	after = Trim(back, start + start_time + 1, 0)
-	before = Animate(part_1, -1, start_time, "Layer_Easing", \
+	# Generate the actual fade in.
+	before = Animate(fade_in, -1, start_time, "Layer_Easing", \
 		over,"add",0.0,x,y,easing, over,"add",1.0,x,y,easing)
-	# If start is 0, we need to skip the before bit entirely
+	# If start is 0, there is nothing to insert before the fade in. Otherwise,
+	# add in the stuff from before it.
 	before = start > 0 ? Trim(back, 0, (start == 1 ? -1 : start - 1)) + before : before
 	# Convert end to after time
 	end = end - before.FrameCount() - end_time
 	#Assert(false, "Original is " + String(back.FrameCount()) + ", Start is " + String(start) + ", End is " + String(end) + ", final is " + String(end+end_time-1))
+	# Trim out to only the part after the fade in
 	over = Trim(over, start_time + 1, 0)
+	# And generate the fade out
 	after = Animate(after, end - 1, end + end_time + 1, "Layer_Easing", \
 		over,"add",1.0,x,y,end_easing, over,"add",0.0,x,y,end_easing)
+	# Combine them together
 	res = before + after
 	# Sanity check
 	Assert(back.FrameCount() == res.FrameCount(), "Wanted " + string(back.FrameCount()) + ", have " + String(res.FrameCount()) + ", before is " + String(before.FrameCount()) + " frames, after is " + String(after.FrameCount()) + ", combined is " + String(before.FrameCount() + after.FrameCount()))
+	return res
+}
+
+#: .. function:: LayerFadeIn(back, over, start, end, start_time[, end_time], x=0, y=0, easing="linear"[, end_easing])
+#:
+#:    :param clip back: the clip to fade on top of
+#:    :param clip over: the clip being faded on top of back
+#:    :param int start: the frame to start fading in on
+#:    :param int fade_duration: the number of frames to fade in over
+#:    :param int x, y: coordinates to place the upper layer on; defaults to 0,0
+#:    :param string easing: the easing function to use; defaults to ``EaseInLinear``
+#:
+#:    Fade in a layer on top of another layer. The fade in animation starts at
+#:    the ``start`` frame (the first frame where the overlaid clip will be at
+#:    all visible) and lasts for ``fade_duration`` frames. Once the layer had
+#:    been faded in, it will remain for the remainder of the video.
+#:
+#:    Note that in order to use the Easing functions, you must include the
+#:    ``Easings.avsi`` file.
+#
+function LayerFadeIn(clip back, clip over, \
+		int start, int fade_duration, \
+		int "x", int "y", \
+		string "easing") {
+	easing = Default(easing, "EaseInLinear")
+	x = Default(x, 0)
+	y = Default(y, 0)
+	Assert(start < back.FrameCount(), "Start time (" + String(start) + ") is after clip ends (" + String(back.FrameCount()-1) + ")")
+
+	# Just the fade in section
+	fade_in = Trim(back, start, 0)
+	# Generate the actual fade in.
+	res = Animate(fade_in, -1, fade_duration, "Layer_Easing", \
+		over,"add",0.0,x,y,easing, over,"add",1.0,x,y,easing)
+	# If start is 0, there is nothing to insert before the fade in. Otherwise,
+	# add in the stuff from before it.
+	res = start > 0 ? Trim(back, 0, (start == 1 ? -1 : start - 1)) + res : res
+	# Sanity check
+	Assert(back.FrameCount() == res.FrameCount(), "Wanted " + string(back.FrameCount()) + ", have " + String(res.FrameCount()))
 	return res
 }
 

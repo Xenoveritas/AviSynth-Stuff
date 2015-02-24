@@ -29,9 +29,10 @@
 #:
 #:    If ``use_dashes`` is ``true`` then the timer image should be 0-9, the dash,
 #:    and finally the colon.
-function Timer(clip video, clip timer, int "x", int "y", \
-	int "start_frame", int "end_frame", int "colon_width", bool "use_dashes", \
-	string "type") {
+function Timer(clip video, clip timer, \
+	int "x", int "y", \
+	int "start_frame", int "end_frame", \
+	int "colon_width", bool "use_dashes", string "type") {
 	start_frame = Default(start_frame, 0)
 	end_frame = Default(end_frame, video.FrameCount()-1)
 	Assert(start_frame < end_frame, "Start frame " + String(start_frame) + " after end frame " + String(end_frame))
@@ -87,9 +88,11 @@ function Timer(clip video, clip timer, int "x", int "y", \
 #:
 #:    If ``use_dashes`` is ``true`` then both timer images should be 0-9, the dash,
 #:    and finally the colon.
-function TimerWithMillis(clip video, clip timer, clip timer_ms, int "x", int "y", \
-	int "start_frame", int "end_frame", int "colon_width", int "colon_width_ms", bool "use_dashes", \
-	string "type") {
+function TimerWithMillis(clip video, clip timer, clip timer_ms, \
+	int "x", int "y", \
+	int "start_frame", int "end_frame", \
+	int "colon_width", int "colon_width_ms", \
+	bool "use_dashes", string "type") {
 	start_frame = Default(start_frame, 0)
 	end_frame = Default(end_frame, video.FrameCount()-1)
 	Assert(start_frame < end_frame, "Start frame " + String(start_frame) + " after end frame " + String(end_frame))

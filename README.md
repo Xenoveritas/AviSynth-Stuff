@@ -9,6 +9,8 @@ It may also prove useful to some other people. There's not a lot here right now.
 
 Check out the `Examples` directory for examples of using some of the scripts.
 
+You can also [check out the generated documentation](http://Xenoveritas.github.io/AviSynth-Stuff/).
+
 ## Plugins
 
 `xvplugins` is simply a bunch of custom AviSynth stuff that proved impossible to
