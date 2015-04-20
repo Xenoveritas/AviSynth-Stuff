@@ -50,9 +50,10 @@ function Cut(clip c, int start, int end) {
 #:        Defaults to 1 second by rounding the frame rate to the nearest whole
 #:        number.
 #:
-#:    Cut out a region, dissolving between the region cut out.
+#:    Cut out a region, dissolving between the start of the region cut to the
+#:    end of the region cut over ``overlap`` frames
 function DissolveCut(clip c, int start, int end, int "overlap") {
-	Assert(start + overlap < end - overlay, \
+	Assert(start + overlap < end - overlap, \
 		"Frame cuts overlap (actual cut would be frames " + \
 		String(start + overlap) + "-" + String(end + overlap) + ")")
 	overlap = Default(overlap, Round(c.FrameRate()))
