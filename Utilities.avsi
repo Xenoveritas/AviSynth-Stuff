@@ -44,14 +44,19 @@ function Cut(clip c, int start, int end) {
 #: .. function:: DissolveCut(c, start, end[, overlap])
 #:
 #:    :param clip c: the clip to cut
-#:    :param int start: the first frame (inclusive) to be removed
-#:    :param int end: the last frame (exclusive) to be removed
-#:    :param int overlap: if given, the number of frames to fade during.
-#:        Defaults to 1 second by rounding the frame rate to the nearest whole
-#:        number.
+#:    :param int start: the first frame (inclusive) to be removed (fade starts
+#:        on this frame)
+#:    :param int end: the last frame (exclusive) to be removed (fade back in
+#:        ends on this frame)
+#:    :param int overlap: if given, the number of frames over which to fade
+#:        while dissolving between the cut areas. Defaults to 1 second by
+#:        rounding the frame rate to the nearest whole number.
 #:
-#:    Cut out a region, dissolving between the start of the region cut to the
-#:    end of the region cut over ``overlap`` frames
+#:    Cut out a region, dissolving over the start and end of the cut footage.
+#:    This actually removes the region from ``start + overlap`` through
+#:    ``end - overlap``. So ``DissolveCut(c, 400, 600, 30)`` will completely
+#:    remove frames 430-570 (inclusive), and frames 400-429 will dissolve to
+#:    frames 571-600.
 function DissolveCut(clip c, int start, int end, int "overlap") {
 	Assert(start + overlap < end - overlap, \
 		"Frame cuts overlap (actual cut would be frames " + \
