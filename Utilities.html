@@ -112,17 +112,23 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>c</strong> (<em>clip</em>) &#8211; the clip to cut</li>
-<li><strong>start</strong> (<em>int</em>) &#8211; the first frame (inclusive) to be removed</li>
-<li><strong>end</strong> (<em>int</em>) &#8211; the last frame (exclusive) to be removed</li>
-<li><strong>overlap</strong> (<em>int</em>) &#8211; if given, the number of frames to fade during.
-Defaults to 1 second by rounding the frame rate to the nearest whole
-number.</li>
+<li><strong>start</strong> (<em>int</em>) &#8211; the first frame (inclusive) to be removed (fade starts
+on this frame)</li>
+<li><strong>end</strong> (<em>int</em>) &#8211; the last frame (exclusive) to be removed (fade back in
+ends on this frame)</li>
+<li><strong>overlap</strong> (<em>int</em>) &#8211; if given, the number of frames over which to fade
+while dissolving between the cut areas. Defaults to 1 second by
+rounding the frame rate to the nearest whole number.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Cut out a region, dissolving between the region cut out.</p>
+<p>Cut out a region, dissolving over the start and end of the cut footage.
+This actually removes the region from <code class="docutils literal"><span class="pre">start</span> <span class="pre">+</span> <span class="pre">overlap</span></code> through
+<code class="docutils literal"><span class="pre">end</span> <span class="pre">-</span> <span class="pre">overlap</span></code>. So <code class="docutils literal"><span class="pre">DissolveCut(c,</span> <span class="pre">400,</span> <span class="pre">600,</span> <span class="pre">30)</span></code> will completely
+remove frames 430-570 (inclusive), and frames 400-429 will dissolve to
+frames 571-600.</p>
 </dd></dl>
 
 <dl class="function">
