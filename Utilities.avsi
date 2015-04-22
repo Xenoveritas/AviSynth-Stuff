@@ -58,10 +58,10 @@ function Cut(clip c, int start, int end) {
 #:    remove frames 430-570 (inclusive), and frames 400-429 will dissolve to
 #:    frames 571-600.
 function DissolveCut(clip c, int start, int end, int "overlap") {
+	overlap = Default(overlap, Round(c.FrameRate()))
 	Assert(start + overlap < end - overlap, \
 		"Frame cuts overlap (actual cut would be frames " + \
 		String(start + overlap) + "-" + String(end + overlap) + ")")
-	overlap = Default(overlap, Round(c.FrameRate()))
 	before = c.Trim(0, start+overlap)
 	after = c.Trim(end-overlap, 0)
 	return Dissolve(before, after, overlap)
