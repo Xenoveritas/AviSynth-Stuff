@@ -21,10 +21,7 @@ and horribly misuses it to resize videos.
 
 ## MastiDS.avsi
 
-Something Awful poster Mastigophoran's DS library for creating videos of DS
-games. Provides utilities for showing one or both of the DS's screens as well as
-transitioning between various views. Check out the [usage guide](http://lpix.org/sslptest/index.php?id=10443)
-for details on how to use it.
+MastiDS now has its own GitHub repository! [Go check it out](https://github.com/Chromatophore/MDS) for the latest updates.
 
 ## Easings.avsi
 
