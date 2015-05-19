@@ -11,7 +11,6 @@ Contents:
 .. toctree::
     :maxdepth: 2
 
-    MastiDS
     Easings
     Transitions
     Utilities
@@ -19,6 +18,7 @@ Contents:
     SNESEffect
     Speed
     TASBlend
+    VCR
 
 
 Indices and tables

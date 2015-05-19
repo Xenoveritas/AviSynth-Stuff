@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>VCR.avsi — VCR effects &mdash; AviSynth Stuff 0.1-1d7d250
+ (2015-05-19) documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1-1d7d250
+ (2015-05-19)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AviSynth Stuff 0.1-1d7d250
+ (2015-05-19) documentation" href="index.html" />
+    <link rel="prev" title="TASBlend.avsi — Method of lowering framerate while maintaining flickering sprites" href="TASBlend.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="TASBlend.html" title="TASBlend.avsi — Method of lowering framerate while maintaining flickering sprites"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 0.1-1d7d250
+ (2015-05-19) documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="vcr-avsi-vcr-effects">
+<h1><code class="docutils literal"><span class="pre">VCR.avsi</span></code> &#8212; VCR effects<a class="headerlink" href="#vcr-avsi-vcr-effects" title="Permalink to this headline">¶</a></h1>
+<p>EFfects that attempt to mimic VCR distortions.</p>
+<dl class="function">
+<dt id="VCRTweak">
+<code class="descname">VCRTweak</code><span class="sig-paren">(</span><em>c</em>, <em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#VCRTweak" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to do the effect on</li>
+<li><strong>amount</strong> (<em>float</em>) &#8211; a number between 0 and 1.0 that indicates &#8220;how much&#8221;
+of the effect should be applied.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Applies a VCR &#8220;tweak&#8221; effect, desaturating and brightening the image.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="VCREffect_WrapLine">
+<code class="descname">VCREffect_WrapLine</code><span class="sig-paren">(</span><em>c</em>, <em>y</em>, <em>shift_x</em><span class="sig-paren">)</span><a class="headerlink" href="#VCREffect_WrapLine" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to do the effect on</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; the y coordinate shift a line on</li>
+<li><strong>shift_x</strong> (<em>int</em>) &#8211; the (currently positive only) number of pixels to
+shift the given line by</li>
+<li><strong>vcr_tweak</strong> (<em>float</em>) &#8211; a value to give to <code class="docutils literal"><span class="pre">VCRTweak</span></code> to alter the given
+line. Defaults to 0.0 (does nothing).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Wraps a given line around by the given <code class="docutils literal"><span class="pre">shift_x</span></code> amount.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="VCREffect_Loop">
+<code class="descname">VCREffect_Loop</code><span class="sig-paren">(</span><em>c</em>, <em>y</em>, <em>amount</em>, <em>decay</em><span class="sig-paren">)</span><a class="headerlink" href="#VCREffect_Loop" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to do the effect on</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; the y coordinate to start the effect on</li>
+<li><strong>amount</strong> (<em>float</em>) &#8211; floating point number indicating number of pixels to
+shift by</li>
+<li><strong>max_amount</strong> (<em>float</em>) &#8211; the initial amount value, used to compute a value for
+<code class="docutils literal"><span class="pre">vcr_tweak</span></code> in the <code class="docutils literal"><span class="pre">VCREffect_WrapLine</span></code> call.</li>
+<li><strong>decay</strong> (<em>float</em>) &#8211; the decay amount - the &#8220;header&#8221; will shift down by
+this percentage each line. Closer to 1.0 makes it much taller, closer
+to 0.0 makes it shorter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Implementation of <code class="docutils literal"><span class="pre">VCREffect</span></code>, this deals with looping (via recursion)
+to create all the necessary layers to generate the effect.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="VCREffect">
+<code class="descname">VCREffect</code><span class="sig-paren">(</span><em>c</em>, <em>y</em>, <em>start</em><span class="optional">[</span>, <em>decay</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#VCREffect" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to do the effect on</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; the y coordinate to start the effect on</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; the starting number of pixels to shift the header by</li>
+<li><strong>decay</strong> (<em>float</em>) &#8211; the decay amount - the &#8220;header&#8221; will shift down by
+this percentage each line. Closer to 1.0 makes it much taller, closer
+to 0.0 makes it shorter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Do a simple VCR effect. Note that this effect currently require an RGB32
+input clip because you can&#8217;t adjust by a single pixel on YUV clips.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="VCRFastForward">
+<code class="descname">VCRFastForward</code><span class="sig-paren">(</span><em>clip c</em>, <em>int start</em>, <em>int end</em>, <em>int speed</em><span class="sig-paren">)</span><a class="headerlink" href="#VCRFastForward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Speeds up a given section of a video, increasing the pitch of the
+underlying sound while doing it. (If you don&#8217;t want to do that, see
+<code class="docutils literal"><span class="pre">Speed.avsi</span></code> for functions that speed up a clip without altering pitch.)</p>
+<p>This applies several different effects to make it look like the effect is
+being done by a VCR. (Which translates to it being very slow because it&#8217;s
+creating a stupidly complicated filter-chain in order to achieve the
+effect.)</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="TASBlend.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">TASBlend.avsi</span></code> &#8212; Method of lowering framerate while maintaining flickering sprites</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/VCR.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="TASBlend.html" title="TASBlend.avsi — Method of lowering framerate while maintaining flickering sprites"
+             >previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 0.1-1d7d250
+ (2015-05-19) documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Xenoveritas.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>
