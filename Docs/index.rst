@@ -18,6 +18,7 @@ Contents:
     SNESEffect
     Speed
     TASBlend
+    VCR
 
 
 Indices and tables

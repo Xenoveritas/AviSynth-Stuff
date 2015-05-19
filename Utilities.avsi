@@ -180,3 +180,28 @@ function Layer_Easing(clip c, clip c2, string op, float level, int x, int y, str
 	}
 	return c.Layer(c2, op, lvl, x, y)
 }
+
+#: .. function:: AssertFrameCountEquals(expected, actual[, verb][, message])
+#:
+#:    :param clip expected: the base clip with the expected number of frames
+#:    :param clip actual: the actual clip with the number of frames to test
+#:    :param string verb: if given, a verb to use in the default message,
+#:      defaults to "generated"
+#:    :param string message: if given, a default message to use (the verb
+#:      parameter is not used in this case)
+#:
+#:    Fade in a layer on top of another layer. The fade in animation starts at
+#:    the ``start`` frame (the first frame where the overlaid clip will be at
+#:    all visible) and lasts for ``fade_duration`` frames. Once the layer had
+#:    been faded in, it will remain for the remainder of the video.
+#:
+#:    Note that in order to use the Easing functions, you must include the
+#:    ``Easings.avsi`` file.
+#
+function AssertFrameCountEquals(clip expected, clip actual, string "verb", string "message") {
+	expected_count = expected.FrameCount()
+	actual_count = actual.FrameCount()
+	verb = Default(verb, "generated")
+	message = Default(message, "Expected " + String(expected_count) + " frames, " + verb + " " + String(actual_count) + " frames (" + String(Abs(actual_count - expected_count)) + " too " + (actual_count > expected_count ? " many" : "few") + ")")
+	Assert(expected_count == actual_count, message)
+}
