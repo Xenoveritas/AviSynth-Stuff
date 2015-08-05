@@ -88,10 +88,11 @@ function findBaseline(font, size) {
     canvas.width = size;
     canvas.height = size;
     var ctx = canvas.getContext('2d');
-    ctx.font = generateFont(font, size);
+    ctx.font = font;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
     ctx.fillText('M', 0, 0);
+    document.body.appendChild(canvas);
     return findBottom(ctx);
 }
 
@@ -224,8 +225,10 @@ DigitGenerator.prototype = {
             } else {
                 // We only need to compare baselines when dealing with
                 // milliseconds, so let's do that.
-                var baseline = findBaseline(font, size),
-                    msBaseline = findBaseline(font, msSize);
+                var sFont = generateFont(font, size*oversize),
+                    msFont = generateFont(font, msSize*oversize),
+                    baseline = findBaseline(font, size*oversize) / oversize,
+                    msBaseline = findBaseline(font, msSize*oversize) / oversize;
                 // Pad the bottom image by the difference so hopefully
                 // everything will line up nicely.
                 var yPad = (size - baseline) - (msSize - msBaseline);
