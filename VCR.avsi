@@ -1,4 +1,4 @@
-#: EFfects that attempt to mimic VCR distortions.
+#: Effects that attempt to mimic VCR distortions.
 
 #: .. function:: VCRTweak(c, amount)
 #:
@@ -70,11 +70,16 @@ function VCREffect(clip c, int y, int amount, float "decay") {
 	return c.VCREffect_Loop(y, amount, amount, decay)
 }
 
-#: .. function:: VCRFastForward(clip c, int start, int end, int speed)
+#: .. function:: VCRFastForward(clip c, int speed[, float decay])
 #:
-#:    Speeds up a given section of a video, increasing the pitch of the
-#:    underlying sound while doing it. (If you don't want to do that, see
-#:    ``Speed.avsi`` for functions that speed up a clip without altering pitch.)
+#:    :param clip c: the clip to speed up
+#:    :param int speed: the number of times faster to make the video (so 2 is
+#:      twice as fast, 3 is three times, etc.)
+#:    :param float decay: the decay amount for the bars, given to ``VCREffect``
+#:
+#:    Speeds up the given clip, increasing the pitch of the underlying sound
+#:    while doing it. (If you don't want to do that, see ``Speed.avsi`` for
+#:    functions that speed up a clip without altering pitch.)
 #:
 #:    This applies several different effects to make it look like the effect is
 #:    being done by a VCR. (Which translates to it being very slow because it's
@@ -103,6 +108,23 @@ function VCRFastForward(clip c, int speed, float "decay") {
 	return c
 }
 
+#: .. function:: VCRFastForwardRange(clip c, int start, int end, int speed[, float decay])
+#:
+#:    :param clip c: the clip to speed up
+#:    :param int start: the first frame to speed up (inclusive)
+#:    :param int end: the last frame to speed up (inclusive)
+#:    :param int speed: the number of times faster to make the video (so 2 is
+#:      twice as fast, 3 is three times, etc.)
+#:    :param float decay: the decay amount for the bars, given to ``VCREffect``
+#:
+#:    Speeds up the range of a given section of a video, increasing the pitch of
+#:    the underlying sound while doing it. (If you don't want to do that, see
+#:    ``Speed.avsi`` for functions that speed up a clip without altering pitch.)
+#:
+#:    This applies several different effects to make it look like the effect is
+#:    being done by a VCR. (Which translates to it being very slow because it's
+#:    creating a stupidly complicated filter-chain in order to achieve the
+#:    effect.)
 function VCRFastForwardRange(clip c, int start, int end, int speed, float "decay") {
 	# Currently starting and ending at the end are "degenerate" and don't work.
 	Assert(start < end, "Start frame (" + String(start) + ") must be less than end frame (" + String(end) + ")")
