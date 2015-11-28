@@ -38,3 +38,27 @@ function Speed4X(clip c, bool "blend") {
 		Speed_copyFPS(blend ? Speed2X_blend(Speed2X_blend(c)) : SelectEven(c), c), \
 		TimeStretch(c, tempo=400))
 }
+
+#: .. function:: ReduceSpeed2X(c)
+#:
+#:    :param clip c: the clip to speed down
+#:
+#:    Delerates a clip to half its original speed while maintaining the original
+#:    audio pitch.
+function ReduceSpeed2X(clip c) {
+	return AudioDub( \
+		c.AssumeFPS(c.FrameRate()/2).ChangeFPS(c.FrameRateNumerator(), c.FrameRateDenominator()), \
+		TimeStretch(c, tempo=50))
+}
+
+#: .. function:: ReduceSpeed4X(c)
+#:
+#:    :param clip c: the clip to speed down
+#:
+#:    Delerates a clip to a quarter its original speed while maintaining the original
+#:    audio pitch.
+function ReduceSpeed4X(clip c) {
+	return AudioDub( \
+		c.AssumeFPS(c.FrameRate()/4).ChangeFPS(c.FrameRateNumerator(), c.FrameRateDenominator()), \
+		TimeStretch(c, tempo=25))
+}
