@@ -43,8 +43,8 @@ function Speed4X(clip c, bool "blend") {
 #:
 #:    :param clip c: the clip to speed down
 #:
-#:    Delerates a clip to half its original speed while maintaining the original
-#:    audio pitch.
+#:    Decelerates a clip to half its original speed while maintaining the
+#:    original audio pitch.
 function ReduceSpeed2X(clip c) {
 	return AudioDub( \
 		c.AssumeFPS(c.FrameRate()/2).ChangeFPS(c.FrameRateNumerator(), c.FrameRateDenominator()), \
@@ -55,8 +55,8 @@ function ReduceSpeed2X(clip c) {
 #:
 #:    :param clip c: the clip to speed down
 #:
-#:    Delerates a clip to a quarter its original speed while maintaining the original
-#:    audio pitch.
+#:    Decelerates a clip to a quarter its original speed while maintaining the
+#:    original audio pitch.
 function ReduceSpeed4X(clip c) {
 	return AudioDub( \
 		c.AssumeFPS(c.FrameRate()/4).ChangeFPS(c.FrameRateNumerator(), c.FrameRateDenominator()), \
