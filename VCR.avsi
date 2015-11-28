@@ -61,7 +61,7 @@ function VCREffect_Loop(clip c, int y, float amount, float max_amount, float dec
 #:      this percentage each line. Closer to 1.0 makes it much taller, closer
 #:      to 0.0 makes it shorter.
 #:
-#:    Do a simple VCR effect. Note that this effect currently require an RGB32
+#:    Do a simple VCR effect. Note that this effect currently requires an RGB32
 #:    input clip because you can't adjust by a single pixel on YUV clips.
 function VCREffect(clip c, int y, int amount, float "decay") {
 	decay = Default(decay, 0.825)
@@ -70,7 +70,7 @@ function VCREffect(clip c, int y, int amount, float "decay") {
 	return c.VCREffect_Loop(y, amount, amount, decay)
 }
 
-#: .. function:: VCRFastForward(clip c, int speed[, float decay])
+#: .. function:: VCRFastForward(c, speed[, decay])
 #:
 #:    :param clip c: the clip to speed up
 #:    :param int speed: the number of times faster to make the video (so 2 is
@@ -108,7 +108,7 @@ function VCRFastForward(clip c, int speed, float "decay") {
 	return c
 }
 
-#: .. function:: VCRFastForwardRange(clip c, int start, int end, int speed[, float decay])
+#: .. function:: VCRFastForwardRange(c, start, end, speed[, decay])
 #:
 #:    :param clip c: the clip to speed up
 #:    :param int start: the first frame to speed up (inclusive)
