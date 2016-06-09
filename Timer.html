@@ -92,7 +92,7 @@ function findBaseline(font, size) {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
     ctx.fillText('M', 0, 0);
-    document.body.appendChild(canvas);
+    // For debug: document.body.appendChild(canvas);
     return findBottom(ctx);
 }
 
