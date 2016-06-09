@@ -6,8 +6,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Speed.avsi — Fast forward a clip &mdash; AviSynth Stuff 0.1-5859553
- (2015-11-28) documentation</title>
+    <title>Speed.avsi — Fast forward a clip &mdash; AviSynth Stuff 0.1-35d4d91
+ (2016-06-09) documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,8 +15,8 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1-5859553
- (2015-11-28)',
+        VERSION:     '0.1-35d4d91
+ (2016-06-09)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="AviSynth Stuff 0.1-5859553
- (2015-11-28) documentation" href="index.html" />
+    <link rel="top" title="AviSynth Stuff 0.1-35d4d91
+ (2016-06-09) documentation" href="index.html" />
     <link rel="next" title="TASBlend.avsi — Method of lowering framerate while maintaining flickering sprites" href="TASBlend.html" />
     <link rel="prev" title="SNESEffect.avsi — Pixelated SNES effect" href="SNESEffect.html" /> 
   </head>
@@ -43,8 +43,8 @@
         <li class="right" >
           <a href="SNESEffect.html" title="SNESEffect.avsi — Pixelated SNES effect"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">AviSynth Stuff 0.1-5859553
- (2015-11-28) documentation</a> &raquo;</li> 
+        <li><a href="index.html">AviSynth Stuff 0.1-35d4d91
+ (2016-06-09) documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -57,6 +57,48 @@
 <h1><code class="docutils literal"><span class="pre">Speed.avsi</span></code> &#8212; Fast forward a clip<a class="headerlink" href="#speed-avsi-fast-forward-a-clip" title="Permalink to this headline">¶</a></h1>
 <p>Functions for speeding up video while keeping the original pitch.
 Optionally blend frames together.</p>
+<dl class="function">
+<dt id="IncreaseSpeed">
+<code class="descname">IncreaseSpeed</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#IncreaseSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to speed up</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; integer amount to speed up by - 2 doubles the speed,
+3 triples it</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Accelerates a clip to a quarter its original speed while maintaining the
+original audio pitch. Note that because this uses strictly integer amounts
+it can&#8217;t blend the frames together in the same way Speed2X and Speed4X do.
+If you want frame blending, you&#8217;ll need to use those two.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ReduceSpeed">
+<code class="descname">ReduceSpeed</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#ReduceSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to speed down</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; integer amount to slow down by - 2 is half as fast, 3
+is a third as fast, and so on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Decelerates a clip to a quarter its original speed while maintaining the
+original audio pitch.</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="Speed2X">
 <code class="descname">Speed2X</code><span class="sig-paren">(</span><em>c</em>, <em>blend=true</em><span class="sig-paren">)</span><a class="headerlink" href="#Speed2X" title="Permalink to this definition">¶</a></dt>
@@ -175,8 +217,8 @@ original audio pitch.</p>
         <li class="right" >
           <a href="SNESEffect.html" title="SNESEffect.avsi — Pixelated SNES effect"
              >previous</a> |</li>
-        <li><a href="index.html">AviSynth Stuff 0.1-5859553
- (2015-11-28) documentation</a> &raquo;</li> 
+        <li><a href="index.html">AviSynth Stuff 0.1-35d4d91
+ (2016-06-09) documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
