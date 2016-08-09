@@ -23,15 +23,20 @@ example = example.Animate(0, example.FrameCount()-1, "SquareAnim", \
 	0, example.FrameCount()-1)
 
 original = example.Subtitle("Original", align=2)
-super_fast = example.IncreaseSpeed(10).Subtitle("IncreaseSpeed(10)", align=2)
 slow_2x = example.ReduceSpeed2X().Subtitle("ReduceSpeed2X", align=2)
+slow_3x = example.ReduceSpeed(3).Subtitle("ReduceSpeed(3)", align=2)
 slow_4x = example.ReduceSpeed4X().Subtitle("ReduceSpeed4X", align=2)
 fast_2x_blend = example.Speed2X().Subtitle("Speed2X, blend=true", align=2)
 fast_2x = example.Speed2X(false).Subtitle("Speed2X, blend=false", align=2)
 fast_4x_blend = example.Speed4X().Subtitle("Speed4X, blend=true", align=2)
 fast_4x = example.Speed4X(false).Subtitle("Speed4X, blend=false", align=2)
+fast_3x_blend = example.IncreaseSpeed(3, true).Subtitle("IncreaseSpeed(3, blend=true)", align=2)
+fast_3x = example.IncreaseSpeed(3).Subtitle("IncreaseSpeed(3, blend=false)", align=2)
+fast_7x_blend = example.IncreaseSpeed(7, true).Subtitle("IncreaseSpeed(7, blend=true)", align=2)
+fast_7x = example.IncreaseSpeed(7).Subtitle("IncreaseSpeed(7, blend=false)", align=2)
 
 StackVertical( \
-	StackHorizontal(original, super_fast, slow_2x, slow_4x), \
-	StackHorizontal(fast_2x_blend, fast_2x, fast_4x_blend, fast_4x) \
+	StackHorizontal(original, slow_2x, slow_3x, slow_4x), \
+	StackHorizontal(fast_2x_blend, fast_2x, fast_4x_blend, fast_4x), \
+	StackHorizontal(fast_3x_blend, fast_3x, fast_7x_blend, fast_7x) \
 )
