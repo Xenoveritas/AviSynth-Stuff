@@ -8,11 +8,10 @@
 #:    :param clip c: the clip to speed up
 #:    :param int amount: integer amount to speed up by - 2 doubles the speed,
 #:      3 triples it
+#:    :param bool blend: whether or not to blend frames, defaults to false
 #:
 #:    Accelerates a clip to a quarter its original speed while maintaining the
-#:    original audio pitch. Note that because this uses strictly integer amounts
-#:    it can't blend the frames together in the same way Speed2X and Speed4X do.
-#:    If you want frame blending, you'll need to use those two.
+#:    original audio pitch.
 function IncreaseSpeed(clip c, int amount, bool "blend") {
 	Assert(amount > 0, "Invalid speed increase " + String(amount) + ": amount must be 1 or more")
 	blend = Default(blend, false)
@@ -48,80 +47,60 @@ function Speed2X_blend(clip c) {
 }
 
 #
-# This function is "special" and is used to try and "trick" AviSynth into
-# blending frames "in sequence." At about 8X the frame cache stops being our
-# friend and just blending frames starts causing stupid seeking.
+# Entrance into the blending recursion function. This generates a filter graph
+# designed to blend frames together in order, blending frames together as
+# evenly and quickly as possible for any given input number.
 #
-# AviSynth doesn't support the concept of loops, so this ends up being
-# recursive to make up for that.
+# It does this by dividing each input in half, so that there's a "left side"
+# and a "right side". The left side rounds down, the right side rounds up. If
+# there's only one frame for a given side, it's blended as-is. If there are
+# more, the function recurses, repeating the operation for each side.
 #
-function Speed_blend(clip c, int frames) {
-	Assert(frames > 2, "Blending together 1 frame makes no sense")
-	# TODO: Even if we're not given an exact power of two, we can use the largest
-	# power of two on the left and then keep iterating until we get down to 2, 1
-	# in the worst case. This will reduce the math errors. But for now:
-	return Frac(Sqrt(frames)) == 0.0 ? \
-		Speed_blend_pow2(c, frames, 0, frames).Subtitle("powerof2") : \
-		Speed_blend_loop(c, c.SelectEvery(frames, 0), 1, frames, c.IsRGB() ? 257.0 : 256.0)
-}
-
+# Ultimately the results of the left and right sides are blended together
+# taking into account how many frames were on each side. If they were even, the
+# "fast" blend is used. Otherwise, an alpha blend is used that takes into
+# account how many frames were on each side.
 #
-# A "special case" - blend together frames that happen to be a power of two.
-# This works by blending frames 0,1 together, then 2,3, then the combintation,
-# and so on.
-#
-# It only works "cleanly" on a power of two and assumes that it was given a
-# power of 2 to start.
-#
-# Each iteration splits into half, recursing through each half, creating a
-# filter graph that looks like:
+# For example, for 3, this effectively generates:
 #
 # Layer(
-#  Layer(
-#   SelectEvery(4, 0),
-#   SelectEvery(4, 1), "fast"
-#  ),
-#  Layer(
-#   SelectEvery(4, 2),
-#   SelectEvery(4, 3), "fast"
-#  ),
-#  "fast"
+#  Layer(c.SelectEvery(3, 0), c.SelectEvery(3, 1), "fast"),
+#  c.SelectEvery(3, 2),
+#  "add", (257 / 3)
 # )
 #
-# The idea being that it ends up requesting frames sequentially to build the
-# "final" frame, while needing to keep as few frames in memory as possible.
-#
-function Speed_blend_pow2(clip c, int total, int offset, int split) {
-	# Due to AviSynth's horrible syntax this looks terrible, but basically:
-	# if (split == 2) {
-	#    left = c.SelectEvery(total, offset);
-	#    right = c.SelectEvery(total, offset+1);
-	# } else {
-	#    split = split / 2;
-	#    left = c.Speed_blend_pow2(total, offset, split);
-	#    right = c.Speed_blend_pow2(total, offset + split, split);
-	# }
-	split = split / 2
-	left = (split == 1) ? \
-		c.SelectEvery(total, offset) : \
-		c.Speed_blend_pow2(total, offset, split)
-	right = (split == 1) ? \
-		c.SelectEvery(total, offset + 1) : \
-		c.Speed_blend_pow2(total, offset + split, split)
-	return Layer(left, right, "fast")
+function Speed_blend(clip c, int frames) {
+	Assert(frames > 1, "Blending together " + String(frames) + " frame makes no sense")
+	return Speed_blend_recurse(c, frames, 0, frames, c.IsRGB() ? 257.0 : 256.0)
 }
 
-function Speed_blend_loop(clip c, clip previous_frame, int frame, int total_frames, float max_level) {
-	# The level we want to blend is 1 / (frame+1) - so the first frame is "given",
-	# the second frame is then layered at half that, the third frame then adds
-	# 1/3rd, and so forth. It adds up so that by the end the "real" influence is
-	# the number of frames, AND we can go through sequentially without seeking.
-	level = Floor(max_level * (1 / Float(frame+1)))
-	result = previous_frame.Layer(c.SelectEvery(total_frames, frame), "add", level)
-	# The actual "loop" is done via recursion here:
-	return frame + 1 < total_frames ? \
-		Speed_blend_loop(c, result, frame + 1, total_frames, max_level) : \
-		result
+#
+# Actual recursive function for doing the blending.
+#
+function Speed_blend_recurse(clip c, int total, int offset, int length, float max_level) {
+	# Sanity asserts:
+	Assert(offset >= 0, "Offset is negative (?)")
+	Assert(offset < total, "Offset " + String(offset) + " is greater than total frames " + String(total))
+	Assert(length > 1, "Length " + String(length) + " is too small")
+	Assert(offset + length <= total, "Offset " + String(offset) + " and length " + String(length) + " is greater than total " + String(total))
+	# How this works: We split into a left and right side. If the number of
+	# frames on the left/right side is 1, we use it directly. Otherwise, we
+	# recurse into that side. The final filter graph will end up being sequential
+	# because it'll recurse down the left side until frame 0 is selected, then
+	# that will blend with frame 1 on it's first left side, and so forth.
+	left_frames = length / 2
+	right_frames = length - left_frames
+	left = left_frames == 1 ? \
+		c.SelectEvery(total, offset) : \
+		Speed_blend_recurse(c, total, offset, left_frames, max_level)
+	right = right_frames == 1 ? \
+		c.SelectEvery(total, offset + left_frames) : \
+		Speed_blend_recurse(c, total, offset + left_frames, right_frames, max_level)
+	# And blend: if the two sides are equal, just use fast. Otherwise, pick a
+	# level remembering that 0 = left, max_level = right.
+	return left_frames == right_frames ? \
+		Layer(left, right, "fast") : \
+		Layer(left, right, "add", Round(max_level * Float(right_frames) / length))
 }
 
 #: .. function:: Speed2X(c, blend=true)
@@ -130,11 +109,9 @@ function Speed_blend_loop(clip c, clip previous_frame, int frame, int total_fram
 #:    :param bool blend: ``true`` to blend frames, ``false`` to simply skip frames
 #:
 #:    Accelerates a clip to 2x its original speed while maintaining the original
-#:    audio pitch.
+#:    audio pitch. Identical to ``IncreaseSpeed(c, 2, blend)``.
 function Speed2X(clip c, bool "blend") {
-	blend = Default(blend, true)
-	fast = Speed_copyFPS(blend ? Speed2X_blend(c) : SelectEven(c), c)
-	return c.HasAudio() ? AudioDub(fast, TimeStretch(c, tempo=200)) : fast
+	return IncreaseSpeed(c, 2, Default(blend, true))
 }
 
 #: .. function:: Speed4X(c, blend=true)
@@ -143,11 +120,9 @@ function Speed2X(clip c, bool "blend") {
 #:    :param bool blend: ``true`` to blend frames, ``false`` to simply skip frames
 #:
 #:    Accelerates a clip to 4x its original speed while maintaining the original
-#:    audio pitch.
+#:    audio pitch. Identical to ``IncreaseSpeed(c, 4, blend)``.
 function Speed4X(clip c, bool "blend") {
-	blend = Default(blend, true)
-	fast = Speed_copyFPS(blend ? Speed2X_blend(Speed2X_blend(c)) : SelectEvery(c,4,0), c)
-	return c.HasAudio() ? AudioDub(fast, TimeStretch(c, tempo=400)) : fast
+	return IncreaseSpeed(c, 4, Default(blend, true))
 }
 
 #: .. function:: ReduceSpeed2X(c)
