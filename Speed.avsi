@@ -3,7 +3,7 @@
 #: Optionally blend frames together.
 #:
 
-#: .. function:: IncreaseSpeed(c)
+#: .. function:: IncreaseSpeed(c, amount, blend=false)
 #:
 #:    :param clip c: the clip to speed up
 #:    :param int amount: integer amount to speed up by - 2 doubles the speed,
@@ -22,7 +22,7 @@ function IncreaseSpeed(clip c, int amount, bool "blend") {
 	return c.HasAudio() ? AudioDub(fast, TimeStretch(c, tempo=100.0*amount)) : fast
 }
 
-#: .. function:: ReduceSpeed(c)
+#: .. function:: ReduceSpeed(c, amount)
 #:
 #:    :param clip c: the clip to speed down
 #:    :param int amount: integer amount to slow down by - 2 is half as fast, 3
