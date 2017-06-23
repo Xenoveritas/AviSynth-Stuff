@@ -181,10 +181,22 @@ function Layer_Easing(clip c, clip c2, string op, float level, int x, int y, str
 	return c.Layer(c2, op, lvl, x, y)
 }
 
+#: .. function:: AssertEquals(expected, actual)
+#:
+#:    :param val expected: the expected value
+#:    :param val actual: the actual value received
+#:
+#:    Helper function for ``Assert`` to provide useful information.
+function AssertEquals(val expected, val actual) {
+	Assert(actual == expected, "Expected " + String(expected) + ", got " + String(actual))
+}
+
 #: .. function:: AssertFrameCountEquals(expected, actual[, verb][, message])
 #:
-#:    :param clip expected: the base clip with the expected number of frames
-#:    :param clip actual: the actual clip with the number of frames to test
+#:    :param val expected: the base clip with the expected number of frames,
+#:      or just an integer with the number of frames expected
+#:    :param val actual: the actual clip with the number of frames to test,
+#:      or just an integer with the actual number of frames
 #:    :param string verb: if given, a verb to use in the default message,
 #:      defaults to "generated"
 #:    :param string message: if given, a default message to use (the verb
@@ -198,9 +210,12 @@ function Layer_Easing(clip c, clip c2, string op, float level, int x, int y, str
 #:    Note that in order to use the Easing functions, you must include the
 #:    ``Easings.avsi`` file.
 #
-function AssertFrameCountEquals(clip expected, clip actual, string "verb", string "message") {
-	expected_count = expected.FrameCount()
-	actual_count = actual.FrameCount()
+function AssertFrameCountEquals(val expected, val actual, string "verb", string "message") {
+	expected_count = IsClip(expected) ? expected.FrameCount() : expected
+	actual_count = IsClip(actual) ? actual.FrameCount() : actual
+	# FIXME if possible: report what the bad type is
+	Assert(IsInt(expected_count), "Bad type for expected")
+	Assert(IsInt(actual_count), "Bad type from actual")
 	verb = Default(verb, "generated")
 	message = Default(message, "Expected " + String(expected_count) + " frames, " + verb + " " + String(actual_count) + " frames (" + String(Abs(actual_count - expected_count)) + " too " + (actual_count > expected_count ? " many" : "few") + ")")
 	Assert(expected_count == actual_count, message)
