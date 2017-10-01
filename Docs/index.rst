@@ -15,6 +15,7 @@ Contents:
     Transitions
     Utilities
     Timer
+    Glitch
     SNESEffect
     Speed
     TASBlend
