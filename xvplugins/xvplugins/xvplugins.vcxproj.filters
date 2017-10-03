@@ -33,6 +33,9 @@
     <ClInclude Include="ImageText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SkewLines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImageText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkewLines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

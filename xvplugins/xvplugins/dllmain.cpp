@@ -2,11 +2,9 @@
 #include "stdafx.h"
 #include "ImageText.h"
 #include "Counter.h"
+#include "SkewLines.h"
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
 	switch (ul_reason_for_call)
 	{
@@ -27,16 +25,17 @@ extern "C" __declspec(dllexport) const char* __stdcall AvisynthPluginInit2(IScri
 	env->AddFunction("PaletteSwap", "cs", Create_PaletteSwap, NULL);
 	env->AddFunction("Counter", COUNTER_ARGS, Create_Counter, NULL);
 	env->AddFunction("CounterStr", COUNTER_STR_ARGS, Create_CounterStr, NULL);
-    // The AddFunction has the following paramters:
-    // AddFunction(Filtername , Arguments, Function to call,0);
-    
-    // Arguments is a string that defines the types and optional names of the arguments for your filter.
-    // c - Video Clip
-    // i - Integer number
-    // f - Float number
-    // s - String
-    // b - boolean
+	env->AddFunction("SkewLines", "cs", Create_SkewLines, NULL);
+	// The AddFunction has the following paramters:
+	// AddFunction(Filtername , Arguments, Function to call,0);
 
-    return "`ImageText' ImageText plugin";
-    // A freeform name of the plugin.
+	// Arguments is a string that defines the types and optional names of the arguments for your filter.
+	// c - Video Clip
+	// i - Integer number
+	// f - Float number
+	// s - String
+	// b - boolean
+
+	// Is this even used anywhere?
+	return "xvplugins";
 }

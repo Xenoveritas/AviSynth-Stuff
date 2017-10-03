@@ -232,7 +232,7 @@ unsigned int ImageTextMetrics::GetStringHeight(const char* str) {
 }
 
 AVSValue __cdecl Create_ImageText(AVSValue args, void* user_data, IScriptEnvironment* env) {
-    return new ImageText(args[0].AsClip(), args[1].AsString(),
+	return new ImageText(args[0].AsClip(), args[1].AsString(),
 		args[2].AsInt(0), args[3].AsInt(16), args[5].AsBool(false), env);
 }
 
@@ -439,5 +439,5 @@ PVideoFrame __stdcall PaletteSwap::GetFrame(int n, IScriptEnvironment* env) {
 
 AVSValue __cdecl Create_PaletteSwap(AVSValue args, void* user_data, IScriptEnvironment* env) {
 	Palette* palette = new Palette(args[1].AsString(), env);
-    return new PaletteSwap(args[0].AsClip(), palette, env);
+	return new PaletteSwap(args[0].AsClip(), palette, env);
 }

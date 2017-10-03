@@ -3,6 +3,8 @@
 /xvplugins/Debug
 /Release
 /xvplugins/Release
+# New Visual Studio junk
+/.vs
 
 # Ignore user files:
 *.suo
