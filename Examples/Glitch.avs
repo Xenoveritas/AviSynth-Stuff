@@ -22,7 +22,7 @@ function WobbleRGBAnim(clip c, int count) {
 color_shift_example = Animate(example_clip, 0, example_clip.FrameCount()-1, "WobbleRGBAnim", 1, example_clip.FrameCount())
 
 # And another example using YUV to shift chroma:
-#chroma_shift_example = MergeChroma(example_yuv_clip, example_yuv_clip.RollHorizontal(16)).ConvertToRGB32()
+#chroma_shift_example = ColorBars(example_clip.Width(), example_clip.Height(), "YV12").AssumeFPS(example_clip).KillAudio().SplitChroma(0).ConvertToRGB32()
 chroma_shift_example = example_yuv_clip.SplitChroma(8).ConvertToRGB32()
 
 return roll_left.Subtitle("Roll Left") + \
