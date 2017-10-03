@@ -11,9 +11,9 @@ To test the plugin, use the files in the Test directory.
 Building
 --------
 
-You'll need to have Visual Studio 2012 Express (or, I'd assume, the pro
-versions, which I don't have) installed. Then simply open the solution and build
-for release.
+You'll need [Visual Studio](https://www.visualstudio.com/) with the "desktop
+development with C++" option installed. Then simply open the solution
+([`xvplugins.sln`](xvplugins.sln)) and build for release.
 
 Alternatively, from the Developer Command Prompt, you can use `MSBUILD` to build
 the solution:
@@ -61,3 +61,27 @@ Creates a counter that counts up on each given input frame.
 `CounterStr(clip numbers, string frames, boolean "pad_zero", boolean "show_zero", int "spin_time")`
 
 Same as above, but uses a string of comma-separated numbers to define the frames.
+
+### SkewLines
+
+`SkewLines(clip c, string function_name)`
+
+Skew each horizontal line a number of pixels based on a user-specified function.
+Much like the built-in `Animate` function, this takes the name of a function to
+invoke for each line of each frame. This function should return a number that
+indicates how many frames to skew. The function should look like:
+
+```avisynth
+function skew_by(int frame_number, int y) {
+  return y
+}
+```
+
+`frame_number` is the frame number being requested, and `y` is the `y`
+coordinate of the line being processed, starting at 0 at the bottom.
+
+Using that function would then look something like:
+
+```avisynth
+my_clip.SkewLines("skew_by")
+```
