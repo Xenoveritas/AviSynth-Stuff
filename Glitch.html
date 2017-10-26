@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Glitch.avsi — Video “glitch” effects &mdash; AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1-ca0f0f5
+ (2017-10-26)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation" href="index.html" />
+    <link rel="next" title="Random.avsi — PRNG functions for AviSynth" href="Random.html" />
+    <link rel="prev" title="Timer.avsi — Overlay a Timer" href="Timer.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Random.html" title="Random.avsi — PRNG functions for AviSynth"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Timer.html" title="Timer.avsi — Overlay a Timer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="glitch-avsi-video-glitch-effects">
+<h1><code class="docutils literal"><span class="pre">Glitch.avsi</span></code> &#8212; Video &#8220;glitch&#8221; effects<a class="headerlink" href="#glitch-avsi-video-glitch-effects" title="Permalink to this headline">¶</a></h1>
+<p>Functions that provide a sort of &#8220;glitched video&#8221; effect. These are intended
+to be used in combination with mask overlays to selectively apply the effect
+on the video. They include things like letting the video &#8220;roll&#8221;.</p>
+<dl class="function">
+<dt id="RollHorizontal">
+<code class="descname">RollHorizontal</code><span class="sig-paren">(</span><em>c</em>, <em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#RollHorizontal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to roll</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; how many pixels to &#8220;roll&#8221; - negative moves left,
+positive moves right (0 returns the original clip).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a clip with the image shifted the given number of pixels</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">clip</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&#8220;Rolls&#8221; a clip left or right the given number of pixels.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">YUV clips likely use chroma subsampling, meaning that moving
+them by an amount that isn&#8217;t a multiple of the subsampling may cause
+some weird chroma blending. However it should still work as YUV clips
+are handled by <code class="docutils literal"><span class="pre">Overlay</span></code>.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="RollSectionHorizontal">
+<code class="descname">RollSectionHorizontal</code><span class="sig-paren">(</span><em>c</em>, <em>top</em>, <em>bottom</em>, <em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#RollSectionHorizontal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to roll</li>
+<li><strong>top</strong> (<em>int</em>) &#8211; top y coordinate (inclusive) to include</li>
+<li><strong>heightOrBottom</strong> (<em>int</em>) &#8211; when positive, the height, when negative, the
+y coordinate from the bottom</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; how many pixels to &#8220;roll&#8221; - negative moves left,
+positive moves right (0 returns the original clip).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Rolls only a certain section of the clip left or right. This works by
+overlaying only a certain portion of the clip over itself. As with
+<a class="reference internal" href="#RollHorizontal" title="RollHorizontal"><code class="xref py py-func docutils literal"><span class="pre">RollHorizontal()</span></code></a>, any <code class="docutils literal"><span class="pre">amount</span></code> should work with YUV clips, but
+choosing one that isn&#8217;t a multiple of the chroma subsampling may introduce
+some blurriness.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">When using this with YUV clips, <code class="docutils literal"><span class="pre">top</span></code> and
+<code class="docutils literal"><span class="pre">heightOrBottom</span></code> have to be valid crop values (they&#8217;re sent to
+<code class="docutils literal"><span class="pre">Crop</span></code> as-is). For certain YUV formats, this means they must be a
+multiple of two.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="RollVertical">
+<code class="descname">RollVertical</code><span class="sig-paren">(</span><em>c</em>, <em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#RollVertical" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to roll</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; how many pixels to &#8220;roll&#8221; - negative moves up,
+positive moves down (0 returns the original clip). Note that YUV clips
+likely use chroma subsampling, meaning that moving them by an amount
+that isn&#8217;t a multiple of the subsampling may cause some weird chroma
+blending. However it should still work as YUV clips are handled by
+<code class="docutils literal"><span class="pre">Overlay</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a clip with the image shifted the given number of pixels</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">clip</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&#8220;Rolls&#8221; a clip up or down the given number of pixels.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="RollSectionVertical">
+<code class="descname">RollSectionVertical</code><span class="sig-paren">(</span><em>c</em>, <em>top</em>, <em>bottom</em>, <em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#RollSectionVertical" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to roll</li>
+<li><strong>left</strong> (<em>int</em>) &#8211; top y coordinate (inclusive) to include</li>
+<li><strong>widthOrRight</strong> (<em>int</em>) &#8211; when positive, the width, when negative, the
+number of pixels from the right edge</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; how many pixels to &#8220;roll&#8221; - negative moves up,
+positive moves down (0 returns the original clip).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Rolls only a certain section of the clip up or down. This works by
+overlaying only a certain portion of the clip over itself. As with
+<a class="reference internal" href="#RollVertical" title="RollVertical"><code class="xref py py-func docutils literal"><span class="pre">RollVertical()</span></code></a>, any <code class="docutils literal"><span class="pre">amount</span></code> should work with YUV clips, but
+choosing one that isn&#8217;t a multiple of the chroma subsampling may introduce
+some blurriness.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">When using this with YUV clips, <code class="docutils literal"><span class="pre">left</span></code> and
+<code class="docutils literal"><span class="pre">widthOrRight</span></code> have to be valid crop values (they&#8217;re sent to
+<code class="docutils literal"><span class="pre">Crop</span></code> as-is). For certain YUV formats, this means they must be a
+multiple of two.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="Roll">
+<code class="descname">Roll</code><span class="sig-paren">(</span><em>c</em>, <em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#Roll" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; the clip to roll</li>
+<li><strong>x</strong> (<em>int</em>) &#8211; how many pixels to &#8220;roll&#8221; left or right</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; how many pixels to &#8220;roll&#8221; up or down</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a clip with the image shifted the given number of pixels</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">clip</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&#8220;Rolls&#8221; a clip by the given number of pixels. This simply combines the
+effects of <a class="reference internal" href="#RollHorizontal" title="RollHorizontal"><code class="xref py py-func docutils literal"><span class="pre">RollHorizontal()</span></code></a> and <a class="reference internal" href="#RollVertical" title="RollVertical"><code class="xref py py-func docutils literal"><span class="pre">RollVertical()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Posterize">
+<code class="descname">Posterize</code><span class="sig-paren">(</span><em>c</em>, <em>red</em><span class="optional">[</span>, <em>green</em><span class="optional">[</span>, <em>blue</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Posterize" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; an RGB clip to posterize</li>
+<li><strong>red</strong> (<em>int</em>) &#8211; the red level - how many &#8220;bits&#8221; of red should remain - 1
+means either 100% or 0%, 2 means 100%, 66%, 33%, 0%, etc.</li>
+<li><strong>green</strong> (<em>int</em>) &#8211; if given, the green level, otherwise uses the same
+value red does</li>
+<li><strong>blue</strong> (<em>int</em>) &#8211; if given, the blue level, otherwise uses the same
+value red does</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a clip with the image posterized</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">clip</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Posterizes an RGB clip. (This only works on RGB clips because it doesn&#8217;t
+really make sense in a YUV clip.) Values past 255 start introducing
+rounding effects, and 255 does effectively nothing but waste time.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SplitRGB">
+<code class="descname">SplitRGB</code><span class="sig-paren">(</span><em>c</em>, <em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#SplitRGB" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; an RGB clip to split RGB channels in</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; the amount to move the different channels by</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a clip with the RGB channels moved by the given number of pixels</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">clip</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Splits RGB channels by amount. The green channel doesn&#8217;t move, red is
+moved <code class="docutils literal"><span class="pre">amount</span></code> pixels left, and blue is moved <code class="docutils literal"><span class="pre">amount</span></code> pixels right.
+Amount may be negative, in which case red is moved right and blue is moved
+left.</p>
+<p>This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre>amount == 0 ? c : MergeRGB(c.RollHorizontal(-amount), c, c.RollHorizontal(amount))
+</pre></div>
+</div>
+<p>Similar code can be used to move RGB channels in other directions, but
+since the horizontal split is the most frequent &#8220;glitch&#8221; effect it&#8217;s
+provided.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SplitChroma">
+<code class="descname">SplitChroma</code><span class="sig-paren">(</span><em>c</em>, <em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#SplitChroma" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c</strong> (<em>clip</em>) &#8211; a YUV clip to split chroma channels in</li>
+<li><strong>amount</strong> (<em>int</em>) &#8211; the amount to move the different channels by - note
+that because this is moving the chroma planes, this is by pixels in
+in the chroma plane and <em>not</em> the luma plane. So in YV12, a value of
+1 will actually shift the planes 2 pixels apart.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a clip with the chroma planes shifted</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">clip</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Splits the UV channels by amount. Luma is not moved.</p>
+<p>This is simply:</p>
+<div class="highlight-python"><div class="highlight"><pre>amount == 0 ? c : YToUV(c.UToY().RollHorizontal(-amount), c.VToY().RollHorizontal(amount), c)
+</pre></div>
+</div>
+<p>Similar code can be used to move the chroma planes in other directions,
+but since the horizontal split is the most frequent &#8220;glitch&#8221; effect it&#8217;s
+provided.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Timer.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">Timer.avsi</span></code> &#8212; Overlay a Timer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Random.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">Random.avsi</span></code> &#8212; PRNG functions for AviSynth</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Glitch.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Random.html" title="Random.avsi — PRNG functions for AviSynth"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Timer.html" title="Timer.avsi — Overlay a Timer"
+             >previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Xenoveritas.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

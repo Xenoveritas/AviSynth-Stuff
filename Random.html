@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Random.avsi — PRNG functions for AviSynth &mdash; AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1-ca0f0f5
+ (2017-10-26)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation" href="index.html" />
+    <link rel="next" title="SNESEffect.avsi — Pixelated SNES effect" href="SNESEffect.html" />
+    <link rel="prev" title="Glitch.avsi — Video “glitch” effects" href="Glitch.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="SNESEffect.html" title="SNESEffect.avsi — Pixelated SNES effect"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Glitch.html" title="Glitch.avsi — Video “glitch” effects"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="random-avsi-prng-functions-for-avisynth">
+<h1><code class="docutils literal"><span class="pre">Random.avsi</span></code> &#8212; PRNG functions for AviSynth<a class="headerlink" href="#random-avsi-prng-functions-for-avisynth" title="Permalink to this headline">¶</a></h1>
+<p>Functions for generating &#8220;random numbers.&#8221; The numbers are not truly random:
+they shouldn&#8217;t be. Instead, they need to be re-seeded for every frame, to
+ensure that the same frame is generated each time.</p>
+<p>Because it&#8217;s necessary to generate the same random numbers for a given frame,
+and the way this PRNG works (it&#8217;s a simple linear congruential generator),
+setting the seed to incrementing frame values will generate somewhat lousy
+random numbers. They&#8217;re likely &#8220;random enough&#8221; for generic effects, but it
+may be worth multiplying the frame number by a large number in order to
+&#8220;separate&#8221; the frames a bit.</p>
+<dl class="function">
+<dt id="SeedRandom">
+<code class="descname">SeedRandom</code><span class="sig-paren">(</span><em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#SeedRandom" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>seed</strong> (<em>int</em>) &#8211; the seed</td>
+</tr>
+</tbody>
+</table>
+<p>This should be called <strong>every frame</strong> to reset the seed. It&#8217;s important to
+note that due to the way this works, incrementing the seed each frame will
+result in really crappy random numbers (they&#8217;ll all be very similar from
+frame to frame). The &#8220;best&#8221; solution is to do something to make
+incrementing frame values seem sort of random themselves, like multiplying
+by a fairly large prime number or something.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="NextRandomInteger">
+<code class="descname">NextRandomInteger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#NextRandomInteger" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a psuedo-random integer in the range 0-1073741823 (inclusive)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the next random number. A call to <a class="reference internal" href="#SeedRandom" title="SeedRandom"><code class="xref py py-func docutils literal"><span class="pre">SeedRandom()</span></code></a> should be
+called at the start of every frame in order to ensure that the values
+generated are the same for each frame.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Random">
+<code class="descname">Random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Random" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a psuedo-random number from 0.0 (inclusive) - 1.0 (exclusive)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the next random number. A call to <a class="reference internal" href="#SeedRandom" title="SeedRandom"><code class="xref py py-func docutils literal"><span class="pre">SeedRandom()</span></code></a> should be
+called at the start of every frame in order to ensure that the values
+generated are the same for each frame.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="RandomInteger">
+<code class="descname">RandomInteger</code><span class="sig-paren">(</span><em>min=0</em>, <em>max=1073741824</em><span class="sig-paren">)</span><a class="headerlink" href="#RandomInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next random number. A call to <a class="reference internal" href="#SeedRandom" title="SeedRandom"><code class="xref py py-func docutils literal"><span class="pre">SeedRandom()</span></code></a> should be
+called at the start of every frame in order to ensure that the values
+generated are the same for each frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>minimum</strong> (<em>int</em>) &#8211; minimum value to return (inclusive), defaults to 0</li>
+<li><strong>maximum</strong> (<em>int</em>) &#8211; maximum value to return (exclusive), defaults to
+1073741824 (which is one more than the max value from
+<a class="reference internal" href="#NextRandomInteger" title="NextRandomInteger"><code class="xref py py-func docutils literal"><span class="pre">NextRandomInteger()</span></code></a>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a psuedo-random number from min (inclusive) - max (exclusive)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Glitch.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">Glitch.avsi</span></code> &#8212; Video &#8220;glitch&#8221; effects</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="SNESEffect.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">SNESEffect.avsi</span></code> &#8212; Pixelated SNES effect</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Random.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="SNESEffect.html" title="SNESEffect.avsi — Pixelated SNES effect"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Glitch.html" title="Glitch.avsi — Video “glitch” effects"
+             >previous</a> |</li>
+        <li><a href="index.html">AviSynth Stuff 0.1-ca0f0f5
+ (2017-10-26) documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Xenoveritas.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>
