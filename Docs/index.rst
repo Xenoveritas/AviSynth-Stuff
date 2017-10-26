@@ -16,6 +16,7 @@ Contents:
     Utilities
     Timer
     Glitch
+    Random
     SNESEffect
     Speed
     TASBlend
